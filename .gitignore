@@ -31,7 +31,7 @@ yarn-error.log*
 ####
 
 *.ts
-server/py37-venv/
+QTMA/py37-venv/
 py37-venv/
 
 # Byte-compiled / optimized / DLL files
