@@ -1,3 +1,10 @@
+# virtual env
+
+client/public/
+*.ts
+server/py37-venv/
+py37-venv/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
