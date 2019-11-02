@@ -11,6 +11,5 @@
     "installServer": "pip install -r backend/requirements.txt",
     "runServer": "python3 backend/studii/manage.py runserver"
   },
-  "author": "",
-  "license": "ISC"
+  "author": ""
 }

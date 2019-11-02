@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "./pages/login";
 import About from "./pages/about";
 import Index from "./pages/index";
+import Dashboard from "./pages/dashboard";
 
 import Header from "./components/header";
 
@@ -21,6 +22,9 @@ export default function BasicExample() {
           </Route>
           <Route path="/login">
             <Login />
+          </Route>
+          <Route path="/dashboard">
+            <Dashboard />
           </Route>
         </Switch>
       </div>
