@@ -47,6 +47,9 @@ INSTALLED_APPS = [
 
     # Local apps
     'userAuth.apps.UserauthConfig',
+
+    # CORS
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +60,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+]
+
+CORS_ORIGIN_REGEX_WHITELIST = [
+    r".*"
 ]
 
 ROOT_URLCONF = 'studii.urls'
