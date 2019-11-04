@@ -6,9 +6,9 @@ export default function DashboardFeed() {
   return (
   <div
   style={{
-    
+
   }}>
-    <h1>Your Dashboard</h1>
+    <h1>Your Feed</h1>
   </div>
 
 

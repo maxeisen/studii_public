@@ -2,7 +2,7 @@ import React from "react";
 
 function Home() {
   const subsectionStyle = {
-    display: "flex"
+    display: "flex",
   };
   const subsectionImageStyle = {};
   return (

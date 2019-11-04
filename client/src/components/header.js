@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { MdMenu } from "react-icons/md";
+import Logo from "../assets/Logo.svg"
 
 function Header() {
   return (
@@ -14,8 +15,8 @@ function Header() {
       }}
     >
       <div>
-        <Link to="/" style={{ color: "black" }}>
-          Studii
+        <Link to="/" style={{ color: "black", paddingLeft: "10px"}}>
+          <img src={Logo} width={80}/>
         </Link>
       </div>
       <div>
