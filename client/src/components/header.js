@@ -1,21 +1,29 @@
 import React from "react";
+import { css } from "@emotion/core";
+
 import { Link } from "react-router-dom";
 import { MdMenu } from "react-icons/md";
+import Logo from "../assets/Logo.svg";
 
 function Header() {
   return (
     <div
-      style={{
-        height: "3rem",
-        display: "flex",
-        justifyContent: "space-around",
-        alignItems: "center",
-        borderBottom: "1px solid #ccc"
-      }}
+      css={css`
+        height: 3rem;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border-bottom: 1px solid #ccc;
+      `}
     >
       <div>
-        <Link to="/" style={{ color: "black" }}>
-          Studii
+        <Link
+          to="/"
+          css={css`
+            color: black;
+          `}
+        >
+          <img src={Logo} />
         </Link>
       </div>
       <div>
