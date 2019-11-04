@@ -1,10 +1,6 @@
 import React from "react";
 
 function Home() {
-  const subsectionStyle = {
-    display: "flex"
-  };
-  const subsectionImageStyle = {};
   return (
     <div>
       <h2>Studii</h2>

@@ -2,7 +2,7 @@ import React from "react";
 import { css } from "@emotion/core";
 
 import { Link } from "react-router-dom";
-import { MdMenu } from "react-icons/md";
+import { MdPerson } from "react-icons/md";
 import Logo from "../assets/Logo.svg";
 import { observer, inject } from "mobx-react";
 
@@ -10,6 +10,8 @@ function Header({ store }) {
   return (
     <div
       css={css`
+        color: white;
+        background-color: #00a7ff;
         height: 3rem;
         display: flex;
         justify-content: space-around;
@@ -35,11 +37,17 @@ function Header({ store }) {
         <input type="text" placeholder="Search..." />
       </div>
       <div>
-        <Link to="/login">Login / Signup</Link>
-      </div>
-      <div>
-        {store.UserEmail}
-        <MdMenu />
+        {!store.UserEmail ? (
+          <Link to="/login">Login / Signup</Link>
+        ) : (
+          <div
+            css={css`
+              font-size: 2rem;
+            `}
+          >
+            <MdPerson />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { observable, action, decorate } from "mobx";
 
 class UserModel {
-  UserEmail = "banana";
+  UserEmail = "";
   UserToken = "";
 
   SetEmail(val) {

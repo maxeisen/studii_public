@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Login from "./pages/login";
+import Signup from "./pages/signup";
 import About from "./pages/about";
 import Index from "./pages/index";
 import Dashboard from "./pages/dashboard";
@@ -24,6 +25,9 @@ export default function BasicExample() {
             </Route>
             <Route path="/login">
               <Login />
+            </Route>
+            <Route path="/signup">
+              <Signup />
             </Route>
             <Route path="/dashboard">
               <Dashboard />

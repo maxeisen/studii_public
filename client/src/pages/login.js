@@ -1,13 +1,18 @@
 import React, { useState } from "react";
+import { observer, inject } from "mobx-react";
+import { useHistory, Link } from "react-router-dom";
+import { css } from "@emotion/core";
 
-function Login() {
-  const [username, setUsername] = useState("");
+function Login({ store }) {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [message, setMessage] = useState("");
 
+  const history = useHistory();
+
   const requestLogin = () => {
-    const data = { username, password };
+    const data = { username: email, password };
     fetch("http://localhost:8000/login/", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
@@ -20,50 +25,61 @@ function Login() {
     })
       .then(r => r.json())
       .then(r => {
-        setMessage("You're logged in! Redirecting...");
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 3000);
+        if (r.token) {
+          setMessage("You're logged in! Redirecting...");
+          store.SetToken(r.token);
+          store.SetEmail(email);
+          setTimeout(() => {
+            history.push("/dashboard");
+          }, 3000);
+        } else {
+          throw new Error("No token received");
+        }
       })
       .catch(r => {
-        setMessage("You're logged in! Redirecting...");
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 3000);
+        setMessage("Wrong username or password");
       });
   };
 
   return (
     <div>
       <div
-        style={{
-          maxWidth: "400px",
-          margin: "0 auto"
-        }}
+        css={css`
+          max-width: 400px;
+          margin: 0 auto;
+        `}
       >
-        <h2>Login or Sign Up</h2>
+        <h2>Login</h2>
         {message ? (
           message
         ) : (
           <div
-            style={{
-              padding: "1rem",
-              marginTop: "0.5rem",
-              border: "1px solid #ccc"
-            }}
+            css={css`
+              padding: 1rem;
+              margin-top: 0.5rem;
+              border: 1px solid #ccc;
+            `}
           >
-            <div style={{ marginBottom: "1rem" }}>
-              <label>Username</label>
+            <div
+              css={css`
+                margin-bottom: 1rem;
+              `}
+            >
+              <label>email</label>
               <br />
               <input
-                value={username}
+                value={email}
                 onChange={e => {
-                  setUsername(e.target.value);
+                  setEmail(e.target.value);
                 }}
                 type="text"
               />
             </div>
-            <div style={{ marginBottom: "1rem" }}>
+            <div
+              css={css`
+                margin-bottom: 1rem;
+              `}
+            >
               <label>Password</label>
               <br />
               <input
@@ -78,8 +94,16 @@ function Login() {
           </div>
         )}
       </div>
+      <div
+        css={css`
+          text-align: center;
+          margin-top: 1rem;
+        `}
+      >
+        Need to make an account? <Link to="/signup">Sign up</Link>
+      </div>
     </div>
   );
 }
 
-export default Login;
+export default inject(`store`)(observer(Login));
