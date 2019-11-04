@@ -3,10 +3,13 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+import uuid
 import datetime
 
 
 class User(AbstractUser):
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     username = models.CharField(blank=True, null=True, max_length=50)
     email = models.EmailField(('email address'), unique=True)
 
@@ -33,9 +36,9 @@ def MinVal(val):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user')
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     avatar = models.ImageField(upload_to='uploads', blank=True)
-    uni = models.CharField(max_length=70, blank=True)
+    university = models.CharField(max_length=70, blank=True)
     program = models.CharField(max_length=70, blank=True)
     gradYear = models.PositiveIntegerField(
         validators=[MinVal, MaxVal], blank=True)
