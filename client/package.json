@@ -6,6 +6,8 @@
     "@emotion/babel-preset-css-prop": "^10.0.23",
     "@emotion/core": "^10.0.22",
     "customize-cra": "^0.8.0",
+    "mobx": "^5.14.2",
+    "mobx-react": "^6.1.4",
     "react": "^16.10.2",
     "react-app-rewired": "^2.1.4",
     "react-dom": "^16.10.2",

@@ -7,27 +7,30 @@ import Index from "./pages/index";
 import Dashboard from "./pages/dashboard";
 
 import Header from "./components/header";
+import WrapWithMobx from "./wrapWithMobx";
 
 export default function BasicExample() {
   return (
-    <Router>
-      <Header />
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
-        <Switch>
-          <Route exact path="/">
-            <Index />
-          </Route>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/dashboard">
-            <Dashboard />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+    <WrapWithMobx>
+      <Router>
+        <Header />
+        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
+          <Switch>
+            <Route exact path="/">
+              <Index />
+            </Route>
+            <Route path="/about">
+              <About />
+            </Route>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/dashboard">
+              <Dashboard />
+            </Route>
+          </Switch>
+        </div>
+      </Router>
+    </WrapWithMobx>
   );
 }
