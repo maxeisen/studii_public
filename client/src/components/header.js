@@ -1,37 +1,56 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { MdMenu } from "react-icons/md";
+import { css } from "@emotion/core";
 
-function Header() {
+import { Link } from "react-router-dom";
+import { MdPerson } from "react-icons/md";
+import Logo from "../assets/Logo.svg";
+import { observer, inject } from "mobx-react";
+
+function Header({ store }) {
   return (
     <div
-      style={{
-        height: "3rem",
-        display: "flex",
-        justifyContent: "space-around",
-        alignItems: "center",
-        borderBottom: "1px solid #ccc"
-      }}
+      css={css`
+        color: white;
+        background-color: #00a7ff;
+        height: 3rem;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border-bottom: 1px solid #ccc;
+      `}
     >
-      <div>
-        <Link to="/" style={{ color: "black" }}>
-          Studii
+      <div
+        className="searchWrapper"
+        css={css`
+          height: 2rem;
+          img {
+            max-height: 2rem;
+            color: white;
+          }
+        `}
+      >
+        <Link to="/">
+          <img src={Logo} />
         </Link>
       </div>
-      <div>
-        <em>Your school</em>
-      </div>
-      <div>
+      <div className="searchWrapper">
         <input type="text" placeholder="Search..." />
       </div>
       <div>
-        <Link to="/login">Login / Signup</Link>
-      </div>
-      <div>
-        <MdMenu />
+        {!store.UserEmail ? (
+          <Link to="/login">Login / Signup</Link>
+        ) : (
+          <div
+            css={css`
+              font-size: 2rem;
+            `}
+          >
+            <MdPerson />
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-export default Header;
+export default inject(`store`)(observer(Header));
