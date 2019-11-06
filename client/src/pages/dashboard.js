@@ -4,8 +4,7 @@ import DashboardFeed from "../components/dashboardFeed";
 
 export default function Dashboard() {
   return (
-    <div>
-      <Sidebar />
+    <div id="Dashboard">
       <DashboardFeed />
     </div>
   );

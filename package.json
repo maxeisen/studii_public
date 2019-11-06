@@ -14,5 +14,8 @@
     "runServer": "python3 backend/studii/manage.py runserver",
     "runMongo": "sudo service mongod start && mongo"
   },
-  "author": ""
+  "author": "",
+  "dependencies": {
+    "create-react-app": "^3.2.0"
+  }
 }

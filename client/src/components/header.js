@@ -2,6 +2,7 @@ import React from "react";
 import { css } from "@emotion/core";
 
 import { Link } from "react-router-dom";
+
 import { MdPerson } from "react-icons/md";
 import Logo from "../assets/Logo.svg";
 import { observer, inject } from "mobx-react";
@@ -19,6 +20,7 @@ function Header({ store }) {
         border-bottom: 1px solid #ccc;
       `}
     >
+
       <div
         className="searchWrapper"
         css={css`
