@@ -1,7 +1,6 @@
 from django.conf.urls import url, include
 from rest_framework import routers
 from userAuth.views import UserViewSet, LoginView, UpdatePassword
-from django.urls import path
 from knox import views as knox_views
 from userAuth.views import LoginView
 

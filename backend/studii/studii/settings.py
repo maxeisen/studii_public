@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     # Third-party Apps
     'rest_framework',
     'knox',
+    'storages',
 
     # Local apps
     'userAuth.apps.UserauthConfig',
+    'posts.apps.PostsConfig',
 
     # CORS
     'corsheaders',
@@ -111,6 +113,15 @@ DATABASES = {
         'NAME': 'studiiDB',
     }
 }
+
+# Amazon web services settings
+DEFAULT_FILE_STORAGE = 'studii.storage_backends.MediaStorage'
+AWS_ACCESS_KEY_ID = 'AKIAWHKPBH6NXPDCVOFJ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'studii-media-server'
+AWS_S3_HOST = 'apigateway.ca-central-1.amazonaws.com'
+S3_USE_SIGV4 = True
+AWS_S3_SIGNATURE_VERSION = 's3v4'
 
 
 # Password validation
