@@ -36,7 +36,7 @@ function Signup({ store }) {
     })
       .then(r => r.json())
       .then(r => {
-        if (r.ok) {
+        if (r.status >= 200 && r.status < 300) {
           setMessage("You're signed up! Redirecting...");
           setTimeout(() => {
             history.push("/login");
