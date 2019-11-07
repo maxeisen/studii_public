@@ -48,7 +48,7 @@ INSTALLED_APPS = [
 
     # Local apps
     'userAuth.apps.UserauthConfig',
-    'posts.apps.PostsConfig',
+    # 'posts.apps.PostsConfig',
 
     # CORS
     'corsheaders',

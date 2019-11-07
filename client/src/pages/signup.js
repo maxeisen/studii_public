@@ -12,8 +12,19 @@ function Signup({ store }) {
   const history = useHistory();
 
   const requestSignup = () => {
-    const data = { username: email, password };
-    fetch("http://localhost:8000/signup/", {
+    const data = {
+      email,
+      username: email,
+      password,
+      first_name: "Example",
+      last_name: "Test",
+      profile: {
+        university: "Queen's",
+        program: "Testing",
+        gradYear: 2020
+      }
+    };
+    fetch("http://localhost:8000/userauth/users/", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       cache: "no-cache",
@@ -25,15 +36,13 @@ function Signup({ store }) {
     })
       .then(r => r.json())
       .then(r => {
-        if (r.token) {
+        if (r.ok) {
           setMessage("You're signed up! Redirecting...");
-          store.SetToken(r.token);
-          store.SetEmail(email);
           setTimeout(() => {
-            history.push("/dashboard");
+            history.push("/login");
           }, 3000);
         } else {
-          throw new Error("No token received");
+          throw new Error("Signup failed");
         }
       })
       .catch(r => {
@@ -100,7 +109,7 @@ function Signup({ store }) {
           margin-top: 1rem;
         `}
       >
-        Already have an account? <Link to="/signup">Log in</Link>
+        Already have an account? <Link to="/login">Log in</Link>
       </div>
     </div>
   );
