@@ -1,4 +1,5 @@
 import { observable, action, decorate } from "mobx";
+import { create, persist } from "mobx-persist";
 
 class UserModel {
   UserEmail = "";
@@ -18,6 +19,17 @@ decorate(UserModel, {
   SetToken: action
 });
 
-const UserStore = new UserModel();
+const schema = {
+  UserEmail: true,
+  UserToken: true
+};
+
+const UserStore = persist(schema)(new UserModel());
 
 export default UserStore;
+
+const hydrate = create({});
+
+hydrate("user", UserStore).then(() =>
+  console.log("UserStore has been hydrated")
+);
