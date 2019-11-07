@@ -1,5 +1,6 @@
 import React from 'react';
 import { slide as Menu } from 'react-burger-menu';
+import { Link } from "react-router-dom";
 
 import Logo from "../assets/Logo.svg"
 
@@ -7,33 +8,17 @@ export default props => {
   return (
     <Menu width={ 250 } >
 
-      <a href = "/">
-        <h1> <img src={Logo} width={100}/> </h1>
-      </a>
-      
-      <a className="menu-item" href="/dashboard">
-        Dashboard
-      </a>
+      <Link to="/"><img src={Logo} width={100}/></Link>
 
-      <a className="menu-item" href="/about">
-        About
-      </a>
+      <Link to="/dashboard">Dashboard</Link>
 
-      <a className="menu-item" href="/feed">
-        My Feed
-      </a>
+      <Link to="/forum">Discussion Forum</Link>
 
-      <a className="menu-item" href="/forum">
-        Discussion Forum
-      </a>
+      <Link to="/notes">Notes</Link>
 
-      <a className="menu-item" href="/notes">
-        Notes
-      </a>
+      <Link to="/buddiis">Studii Budiis</Link>
 
-      <a className="menu-item" href="/buddiis">
-        Studii Buddiis
-      </a>
+      <Link to="/about">About</Link>
 
     </Menu>
   );
