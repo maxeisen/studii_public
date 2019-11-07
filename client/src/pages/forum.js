@@ -6,7 +6,10 @@ export default function Forum() {
   return (
     <div id="Forum">
       <h1>Discussion Forum</h1>
-      <ForumPosts />
+      <p>Here you can view recent forum posts relating to your courses.</p>
+      <div css={{paddingTop: "10px"}}>
+        <ForumPosts/>
+      </div>
     </div>
   );
 }
