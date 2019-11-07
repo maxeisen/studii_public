@@ -7,9 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "installClient": "cd client && npm i",
     "runClient": "cd client && npm run start",
-    "venv": ". py37-venv/bin/activate",
+    "createVenv": "virtualenv --python=/usr/bin/python3.7 py37-venv",
+    "runVenv": ". py37-venv/bin/activate",
+    "exitVenv": "deactivate",
     "installServer": "pip install -r backend/requirements.txt",
-    "runServer": "python3 backend/studii/manage.py runserver"
+    "runServer": "python3 backend/studii/manage.py runserver",
+    "runMongo": "sudo service mongod start && mongo"
   },
-  "author": ""
+  "author": "",
+  "dependencies": {
+    "create-react-app": "^3.2.0"
+  }
 }
