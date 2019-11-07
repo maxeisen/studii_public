@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,6 +22,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '!o0ji0a@*!yjjra8#f@!vei9*p2mrry#e52_xxmi34l%t7#t9b'
+
+AUTH_SIGNING_KEY = '$C&F)J@NcRfUjXnZr4u7x!A%D*G-KaPdSgVkYp3s5v8y/B?E(H+MbQeThWmZq4t7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,10 +43,12 @@ INSTALLED_APPS = [
 
     # Third-party Apps
     'rest_framework',
-    'rest_framework.authtoken',
+    'knox',
+    'storages',
 
     # Local apps
     'userAuth.apps.UserauthConfig',
+    # 'posts.apps.PostsConfig',
 
     # CORS
     'corsheaders',
@@ -88,10 +93,15 @@ WSGI_APPLICATION = 'studii.wsgi.application'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+        'knox.auth.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated', ]
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+REST_KNOX = {
+    'USER_SERIALIZER': 'userAuth.serializers.UserSerializer'
 }
 
 # Database
@@ -103,6 +113,15 @@ DATABASES = {
         'NAME': 'studiiDB',
     }
 }
+
+# Amazon web services settings
+DEFAULT_FILE_STORAGE = 'studii.storage_backends.MediaStorage'
+AWS_ACCESS_KEY_ID = 'AKIAWHKPBH6NXPDCVOFJ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'studii-media-server'
+AWS_S3_HOST = 'apigateway.ca-central-1.amazonaws.com'
+S3_USE_SIGV4 = True
+AWS_S3_SIGNATURE_VERSION = 's3v4'
 
 
 # Password validation

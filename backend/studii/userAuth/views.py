@@ -1,25 +1,60 @@
-from django.contrib.auth import authenticate
-from rest_framework.authtoken.models import Token
+from rest_framework import permissions, status
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
-from rest_framework.status import (
-    HTTP_400_BAD_REQUEST,
-    HTTP_404_NOT_FOUND,
-    HTTP_200_OK
-)
 from rest_framework.response import Response
+from userAuth.serializers import UserSerializer, ChangePasswordSerializer
+from .models import User
+from rest_framework import viewsets
+from userAuth.permissions import IsLoggedInUserOrAdmin, IsAdminUser
+from knox.views import LoginView as KnoxLoginView
+from django.contrib.auth import login
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 
-class login(APIView):
-    permission_classes = [AllowAny]
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_permissions(self):
+        permission_classes = []
+        if self.action == 'create' or self.action == 'validate':
+            permission_classes = [permissions.AllowAny]
+        elif self.action == 'retrieve' or self.action == 'update' or self.action == 'partial_update':
+            permission_classes = [IsLoggedInUserOrAdmin]
+        elif self.action == 'list' or self.action == 'destroy':
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
+
+
+class LoginView(KnoxLoginView):
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request, format=None):
-        username = request.data.get("username")
-        password = request.data.get("password")
-        if username is None or password is None:
-            return Response({'error': 'Please provide username and password'}, status=HTTP_400_BAD_REQUEST)
-        user = authenticate(username=username, password=password)
-        if not user:
-            return Response({'error': 'Invalid Credentials'}, status=HTTP_404_NOT_FOUND)
-        token = Token.objects.get_or_create(user=user)[0]
-        return Response({'token': token.key}, status=HTTP_200_OK)
+        serializer = AuthTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return super(LoginView, self).post(request, format=None)
+
+
+class UpdatePassword(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def put(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = ChangePasswordSerializer(data=request.data)
+
+        if serializer.is_valid():
+            # Check old password
+            old_password = serializer.data.get("old_password")
+            if not self.object.check_password(old_password):
+                return Response({"old_password": ["Wrong password."]},
+                                status=status.HTTP_400_BAD_REQUEST)
+            # set_password also hashes the password that the user will get
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

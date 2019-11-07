@@ -20,7 +20,6 @@ function Header({ store }) {
         border-bottom: 1px solid #ccc;
       `}
     >
-
       <div
         className="searchWrapper"
         css={css`
@@ -44,10 +43,19 @@ function Header({ store }) {
         ) : (
           <div
             css={css`
-              font-size: 2rem;
+              display: flex;
+              justify-content: space-around;
+              align-items: center;
             `}
           >
-            <MdPerson />
+            <span
+              css={css`
+                font-size: 2rem;
+              `}
+            >
+              <MdPerson />
+            </span>
+            <span>{store.UserEmail}</span>
           </div>
         )}
       </div>
