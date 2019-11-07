@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from userAuth.serializers import UserSerializer, ChangePasswordSerializer
 from .models import User
 from rest_framework import viewsets
-from userAuth.permissions import IsLoggedInUserOrAdmin, IsAdminUser
+from studii.permissions import IsLoggedInUserOrAdmin, IsAdminUser
 from knox.views import LoginView as KnoxLoginView
 from django.contrib.auth import login
 from rest_framework.authtoken.serializers import AuthTokenSerializer
