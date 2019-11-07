@@ -37,7 +37,7 @@ def MinVal(val):
 class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
-    avatar = models.ImageField(upload_to='uploads', blank=True)
+    avatar = models.ImageField(upload_to='profileAvatar', blank=True)
     university = models.CharField(max_length=70, blank=True)
     program = models.CharField(max_length=70, blank=True)
     gradYear = models.PositiveIntegerField(
