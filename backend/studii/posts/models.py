@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 import uuid
 
 
@@ -14,6 +13,12 @@ class Content(models.Model):
         elif self.textContent is not None:
             return self.response_content[:20]
 
+    def save(self, *args, **kwargs):
+        if self.textContent == '' and self.fileContent == '':
+            return
+        else:
+            super(Content, self).save(*args, **kwargs)
+
 
 class Post(models.Model):
     id = models.UUIDField(
@@ -21,10 +26,10 @@ class Post(models.Model):
     contentType = models.CharField(max_length=20)
     title = models.CharField(max_length=70)
     description = models.CharField(max_length=500, blank=True)
-    author = models.OneToOneField(
-        settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, related_name='post')
-    dateTimePosted = models.DateTimeField(auto_now_add=True)
-    dateTimeEdited = models.DateTimeField(auto_now=True)
+    author = models.ForeignKey(
+        'userAuth.User', null=True, on_delete=models.SET_NULL, related_name='post')
+    dateTimePosted = models.DateTimeField(auto_now_add=True, editable=False)
+    dateTimeEdited = models.DateTimeField(auto_now=True, null=True)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     content = models.OneToOneField(
         Content, on_delete=models.CASCADE, related_name='post')
