@@ -6,6 +6,9 @@ import Signup from "./pages/signup";
 import About from "./pages/about";
 import Index from "./pages/index";
 import Dashboard from "./pages/dashboard";
+import Forum from "./pages/forum";
+import Notes from "./pages/notes";
+import Sidebar from "./components/sidebar"
 
 import Header from "./components/header";
 
@@ -15,6 +18,7 @@ export default function BasicExample() {
   return (
     <WrapWithMobx>
       <Router>
+        <Sidebar />
         <Header />
         <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
           <Switch>
@@ -32,6 +36,12 @@ export default function BasicExample() {
             </Route>
             <Route path="/dashboard">
               <Dashboard />
+            </Route>
+            <Route path="/forum">
+              <Forum />
+            </Route>
+            <Route path="/notes">
+              <Notes />
             </Route>
           </Switch>
         </div>

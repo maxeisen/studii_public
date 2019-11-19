@@ -8,6 +8,10 @@ import Logo from "../assets/Logo.svg";
 import { observer, inject } from "mobx-react";
 
 function Header({ store }) {
+  const logout = () => {
+    store.SetEmail("");
+    store.SetToken("");
+  };
   return (
     <div
       css={css`
@@ -20,7 +24,6 @@ function Header({ store }) {
         border-bottom: 1px solid #ccc;
       `}
     >
-
       <div
         className="searchWrapper"
         css={css`
@@ -44,10 +47,25 @@ function Header({ store }) {
         ) : (
           <div
             css={css`
-              font-size: 2rem;
+              display: flex;
+              justify-content: space-around;
+              align-items: center;
+              * {
+                margin-left: 0.5rem;
+              }
             `}
           >
-            <MdPerson />
+            <span
+              css={css`
+                font-size: 2rem;
+              `}
+            >
+              <MdPerson />
+            </span>
+            <span>{store.UserEmail}</span>
+            <span>
+              <button onClick={logout}>Log out</button>
+            </span>
           </div>
         )}
       </div>

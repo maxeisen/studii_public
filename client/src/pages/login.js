@@ -13,7 +13,7 @@ function Login({ store }) {
 
   const requestLogin = () => {
     const data = { username: email, password };
-    fetch("http://localhost:8000/login/", {
+    fetch("http://localhost:8000/userauth/login/", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       cache: "no-cache",
