@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { observer, inject } from "mobx-react";
 import { useHistory, Link } from "react-router-dom";
 import { css } from "@emotion/core";
+import ContentWrapper from "../components/contentWrapper";
 
 function Login({ store }) {
   const [email, setEmail] = useState("");
@@ -42,7 +43,7 @@ function Login({ store }) {
   };
 
   return (
-    <div>
+    <ContentWrapper>
       <div
         css={css`
           max-width: 400px;
@@ -102,7 +103,7 @@ function Login({ store }) {
       >
         Need to make an account? <Link to="/signup">Sign up</Link>
       </div>
-    </div>
+    </ContentWrapper>
   );
 }
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-export default (props) => (
+const ContentWrapper = props => (
   <div
     css={{
       maxWidth: "1400px",
@@ -16,9 +16,14 @@ export default (props) => (
         paddingLeft: "5%",
         paddingRight: "5%"
       },
-      height: "100%"
+      paddingTop: "0",
+      paddingBottom: "0",
+      marginTop: "0",
+      marginBottom: "0"
     }}
   >
     {props.children}
   </div>
 );
+
+export default ContentWrapper;
