@@ -1,5 +1,6 @@
 import React from "react";
+import ContentWrapper from "../components/contentWrapper";
 
 export default function UserProfile() {
-  return <div>Profile</div>;
+  return <ContentWrapper>Profile</ContentWrapper>;
 }
