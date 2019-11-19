@@ -9,6 +9,7 @@ import Dashboard from "./pages/dashboard";
 import Forum from "./pages/forum";
 import Notes from "./pages/notes";
 import Sidebar from "./components/sidebar";
+import Upload from "./pages/upload";
 
 import Header from "./components/header";
 
@@ -49,6 +50,11 @@ export default function BasicExample() {
             <Sidebar />
             <Header />
             <Notes />
+          </Route>
+          <Route path="/upload">
+            <Sidebar />
+            <Header />
+            <Upload />
           </Route>
         </Switch>
       </Router>

@@ -22,6 +22,7 @@ function Header({ store }) {
         justify-content: space-around;
         align-items: center;
         border-bottom: 1px solid #ccc;
+        margin-bottom: 2rem;
       `}
     >
       <div

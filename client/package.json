@@ -13,6 +13,7 @@
     "react-app-rewired": "^2.1.4",
     "react-burger-menu": "^2.6.11",
     "react-dom": "^16.10.2",
+    "react-dropzone": "^10.2.0",
     "react-icons": "^3.7.0",
     "react-router-dom": "^5.1.2",
     "react-router-scroll-top": "^0.2.1",
