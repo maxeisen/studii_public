@@ -5,9 +5,10 @@ import { css } from "@emotion/core";
 import ThumbUpIcon from "../assets/Icons/thumbsup.svg";
 import CommentIcon from "../assets/Icons/comment.svg";
 
+
 const forumPosts = [
     {
-      postID: "",
+      postID: "1",
       author: "Student123",
       course: "CISC 220",
       title: "What is a command-line interface?",
@@ -17,7 +18,7 @@ const forumPosts = [
       score: 15
     },
     {
-      postID: "",
+      postID: "2",
       author: "MEisen",
       course: "CISC 365",
       title: "Wtf is Huffman Encoding?",
@@ -27,7 +28,7 @@ const forumPosts = [
       score: 4
     },
       {
-      postID: "",
+      postID: "3",
       author: "ConnorTheFrosh",
       course: "General",
       title: "What exactly is computer science? and why am I studying it",
@@ -37,7 +38,7 @@ const forumPosts = [
       score: 11
       },
     {
-      postID: "",
+      postID: "4",
       author: "Hill_Ross",
       course: "CISC 499",
       title: "Can I get some thesis suggestions? I'm lost",
@@ -47,7 +48,7 @@ const forumPosts = [
       score: 12
     },
     {
-      postID: "",
+      postID: "5",
       author: "PattyLen",
       course: "General",
       title: "Django vs. Django Unchained",
@@ -72,7 +73,7 @@ const Forum = () => (
                 border: 2px solid lightgray;
                 border-radius: 5px;
                 margin: 20px 20px 20px 20px;
-              `}
+                `}
               >
                 <span align= "right" css={{ fontSize: "10px", color: "#484848", lineHeight: "20px"}}>{date}</span>
                 <h2
@@ -83,7 +84,7 @@ const Forum = () => (
                 >
                   <b>{author}</b> to <b css = {{color: "#00A7FF"}}>{course}</b>
                 </h2>
-                <Link to={`/${postID}`}>
+                <Link to={`/post/${postID}`}>
                 <h2 
                 css={{
                     fontWeight: "500",

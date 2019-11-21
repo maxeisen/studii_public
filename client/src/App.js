@@ -9,6 +9,7 @@ import Dashboard from "./pages/dashboard";
 import Forum from "./pages/forum";
 import Notes from "./pages/notes";
 import Sidebar from "./components/sidebar"
+import Post from "./pages/post";
 
 import Header from "./components/header";
 
@@ -42,6 +43,9 @@ export default function BasicExample() {
             </Route>
             <Route path="/notes">
               <Notes />
+            </Route>
+            <Route path="/post/:id">
+              <Post />
             </Route>
           </Switch>
         </div>

@@ -1,52 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Sidebar from "../components/sidebar";
 import { Link } from "react-router-dom";
-import ContentWrapper from "./contentWrapper";
+import ContentWrapper from "../components/contentWrapper";
 import { css } from "@emotion/core";
-import Bio1 from "../assets/SampleNotes/bio1.jpg";
-import Bio2 from "../assets/SampleNotes/bio2.jpg";
-import Log1 from "../assets/SampleNotes/log1.png";
-import Log2 from "../assets/SampleNotes/log2.png";
 import ThumbUpIcon from "../assets/Icons/thumbsup.svg";
 import CommentIcon from "../assets/Icons/comment.svg";
 
-const notesPosts = [
+export default function Post( props ) {
+  const [postData, setPostData] = useState({});
+  useEffect(() => {
+    setPostData(    
     {
-      postID: "",
-      author: "NoteTakerMan69",
-      course: "BIOL 304",
-      title: "Lecture #10 Notes",
-      text: "Hey all, here are the lecture notes from today's lecture on interesting things...",
-      image1: Bio1,
-      image2: Bio2,
-      date: "November 3, 2019",
-      score: 10,
-      numComments: 7
-    },
-    {
-      postID: "",
-      author: "aCompSciStudent",
-      course: "CISC 204",
-      title: "Some L9 Notes",
-      text: "Here are some of the notes from today's lecture on predicate logic models if anyone was interested",
-      image1: Log1,
-      image2: Log2,
-      date: "October 30, 2019",
-      score: 15,
-      numComments: 6
-    }
-]
+      postID: "1",
+      author: "Student123",
+      course: "CISC 220",
+      title: "What is a command-line interface?",
+      content: "Hi guys, I'm reading over some notes from this week's lectures and I have no clue what a command-line interface is. Can anyone offer some help?",
+      date: "November 4, 2019",
+      numComments: 4,
+      score: 15
+    })
+  })
 
-const Notes = () => (
-    <section id="notes">
+const { postID, author, course, title, content, date, numComments, score } = postData;
+
+  return (
+    <section id="forum">
       <ContentWrapper>
         <div>
           <div
           >
-            {notesPosts.map(({ postID, author, course, title, text, image1, image2, date, score, numComments }) => (
               <div
                 key={title}
                 css={css`
-                padding: 20px 20px 20px 20px;
+                padding: 20px 20px 0px 20px;
                 border: 2px solid lightgray;
                 border-radius: 5px;
                 margin: 20px 20px 20px 20px;
@@ -71,17 +58,10 @@ const Notes = () => (
                 </h2>
                 </Link>
                 <p
-                  css={{
-                      fontSize: "14px",
-                      color: "#000000",
-                      lineHeight: "20px",
-                      paddingBottom: "30px"
-                }}
+                  css={{ fontSize: "14px", color: "#000000", lineHeight: "20px" }}
                 >
-                  {text}
+                  {content}
                 </p>
-                <img width="50%" src={image1} />
-                <img width="50%" src={image2} />
                 <div class="flex-container">
                   <div
                     css={{ fontSize: "14px", color: "#757575", lineHeight: "20px" }}
@@ -92,14 +72,13 @@ const Notes = () => (
                     css={{ position: "relative", paddingLeft: "5%", fontSize: "14px", color: "#757575", lineHeight: "20px" }}
                   >
                     <img src={CommentIcon} width="20px" css={{ position: "absolute", top: "15%", right: "25%" }}/> <b><sup>{numComments}</sup></b>
+                  
                   </div>
                 </div>
               </div>
-            ))}
           </div>
         </div>
       </ContentWrapper>
     </section>
   );
-
-  export default Notes;
+}
