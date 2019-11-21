@@ -1,10 +1,11 @@
 import React from "react";
+import ContentWrapper from "../components/contentWrapper";
 
 function StudiiBudii() {
   return (
-    <div>
+    <ContentWrapper>
       <h2>StudiiBudii</h2>
-    </div>
+    </ContentWrapper>
   );
 }
 

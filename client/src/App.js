@@ -8,43 +8,49 @@ import Index from "./pages/index";
 import Dashboard from "./pages/dashboard";
 import Forum from "./pages/forum";
 import Notes from "./pages/notes";
-import Sidebar from "./components/sidebar"
+import Sidebar from "./components/sidebar";
 
 import Header from "./components/header";
 
-import WrapWithMobx from "./wrapWithMobx";
+import WrapWithMobx from "./components/wrapWithMobx";
 
 export default function BasicExample() {
   return (
     <WrapWithMobx>
       <Router>
-        <Sidebar />
-        <Header />
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
-          <Switch>
-            <Route exact path="/">
-              <Index />
-            </Route>
-            <Route path="/about">
-              <About />
-            </Route>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <Route path="/signup">
-              <Signup />
-            </Route>
-            <Route path="/dashboard">
-              <Dashboard />
-            </Route>
-            <Route path="/forum">
-              <Forum />
-            </Route>
-            <Route path="/notes">
-              <Notes />
-            </Route>
-          </Switch>
-        </div>
+        <Switch>
+          <Route exact path="/">
+            <Index />
+          </Route>
+          <Route path="/about">
+            <Sidebar />
+            <Header />
+            <About />
+          </Route>
+          <Route path="/login">
+            <Header />
+            <Login />
+          </Route>
+          <Route path="/signup">
+            <Header />
+            <Signup />
+          </Route>
+          <Route path="/dashboard">
+            <Sidebar />
+            <Header />
+            <Dashboard />
+          </Route>
+          <Route path="/forum">
+            <Sidebar />
+            <Header />
+            <Forum />
+          </Route>
+          <Route path="/notes">
+            <Sidebar />
+            <Header />
+            <Notes />
+          </Route>
+        </Switch>
       </Router>
     </WrapWithMobx>
   );
