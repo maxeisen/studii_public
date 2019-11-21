@@ -8,6 +8,10 @@ import Logo from "../assets/Logo.svg";
 import { observer, inject } from "mobx-react";
 
 function Header({ store }) {
+  const logout = () => {
+    store.SetEmail("");
+    store.SetToken("");
+  };
   return (
     <div
       css={css`
@@ -46,6 +50,9 @@ function Header({ store }) {
               display: flex;
               justify-content: space-around;
               align-items: center;
+              * {
+                margin-left: 0.5rem;
+              }
             `}
           >
             <span
@@ -56,6 +63,9 @@ function Header({ store }) {
               <MdPerson />
             </span>
             <span>{store.UserEmail}</span>
+            <span>
+              <button onClick={logout}>Log out</button>
+            </span>
           </div>
         )}
       </div>

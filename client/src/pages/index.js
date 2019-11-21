@@ -1,27 +1,132 @@
 import React from "react";
+import ContentWrapper from "../components/contentWrapper";
+import { css } from "@emotion/core";
+import { Link } from "react-router-dom";
 
 function Home() {
-
   return (
-    <div>
-      <h2>Studii</h2>
-      <p>A study system where classmates help eachother</p>
-      <section>
-        <div>
-          <div>
-            <h3>Subheading 1</h3>
-            <p>Blurb</p>
-          </div>
-          <div>Image...</div>
+    <div
+      css={css`
+        > .landingPageTop {
+          width: 100%;
+          height: 100vh;
+        }
+      `}
+    >
+      <div class="landingPageTop">
+        <div
+          css={css`
+            height: 3rem;
+            margin: 0 1rem;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            a,
+            span {
+              color: white;
+              font-size: 1.5rem;
+              text-decoration: none;
+              padding: 0 0.2rem;
+            }
+            a {
+              text-shadow: 1px 1px 2px rgba(50, 50, 50, 0.3);
+            }
+            a:hover {
+              text-decoration: underline;
+            }
+          `}
+        >
+          <Link to="/login">Login</Link>
+          <span>|</span>
+          <Link to="/signup">Sign Up</Link>
         </div>
-        <div>
-          <div>
-            <h3>Subheading 1</h3>
-            <p>Blurb</p>
+        <div
+          css={css`
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+            top: 40%;
+            transform: translateY(-50%);
+          `}
+        >
+          <img src={require("../assets/Logo.svg")} />
+          <div
+            css={css`
+              height: 1rem;
+              width: 12rem;
+              background-color: #00a7ff;
+              margin: 1rem 0;
+            `}
+          />
+          <div
+            css={css`
+              font-weight: bold;
+            `}
+          >
+            A collaborative study space for students
           </div>
-          <div>Image...</div>
         </div>
-      </section>
+        <div
+          css={css`
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+          `}
+        >
+          <img src={require("../assets/chevronDown.svg")} />
+        </div>
+      </div>
+      <ContentWrapper>
+        <div
+          css={css`
+            > section {
+              margin: 2rem 0;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            > section > div {
+              width: 50%;
+              text-align: center;
+            }
+            h2 {
+              margin-bottom: 1rem;
+            }
+          `}
+        >
+          <section>
+            <div>
+              <img src={require("../assets/personAtDesk.png")} />
+            </div>
+            <div>
+              <h2>A study space made by students, for students.</h2>
+              <p>
+                Use this paragraph to explain about Studii. Should discuss the
+                study body pairing, making quizzes, posting notes, and having
+                online students. Can search for course-related content, or
+                search by content.
+              </p>
+            </div>
+          </section>
+          <section>
+            <div>
+              <h2>An emphasis on collaborative learning</h2>
+              <p>
+                Use this paragraph to explain about Studii. Should discuss the
+                study body pairing, making quizzes, posting notes, and having
+                online students. Can search for course-related content, or
+                search by content.
+              </p>
+            </div>
+            <div>
+              <img src={require("../assets/people.png")} />
+            </div>{" "}
+          </section>
+        </div>
+      </ContentWrapper>
     </div>
   );
 }

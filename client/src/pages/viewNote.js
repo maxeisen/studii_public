@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function ViewNote() {
-  return <div>Some note</div>;
+  return <ContentWrapper>Some note</ContentWrapper>;
 }

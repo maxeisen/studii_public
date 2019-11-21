@@ -8,17 +8,22 @@ import Index from "./pages/index";
 import Dashboard from "./pages/dashboard";
 import Forum from "./pages/forum";
 import Notes from "./pages/notes";
+<<<<<<< HEAD
 import Sidebar from "./components/sidebar"
 import Post from "./pages/post";
+=======
+import Sidebar from "./components/sidebar";
+>>>>>>> f89a865716b303819491cacac1b75be0b426caca
 
 import Header from "./components/header";
 
-import WrapWithMobx from "./wrapWithMobx";
+import WrapWithMobx from "./components/wrapWithMobx";
 
 export default function BasicExample() {
   return (
     <WrapWithMobx>
       <Router>
+<<<<<<< HEAD
         <Sidebar />
         <Header />
         <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
@@ -49,6 +54,41 @@ export default function BasicExample() {
             </Route>
           </Switch>
         </div>
+=======
+        <Switch>
+          <Route exact path="/">
+            <Index />
+          </Route>
+          <Route path="/about">
+            <Sidebar />
+            <Header />
+            <About />
+          </Route>
+          <Route path="/login">
+            <Header />
+            <Login />
+          </Route>
+          <Route path="/signup">
+            <Header />
+            <Signup />
+          </Route>
+          <Route path="/dashboard">
+            <Sidebar />
+            <Header />
+            <Dashboard />
+          </Route>
+          <Route path="/forum">
+            <Sidebar />
+            <Header />
+            <Forum />
+          </Route>
+          <Route path="/notes">
+            <Sidebar />
+            <Header />
+            <Notes />
+          </Route>
+        </Switch>
+>>>>>>> f89a865716b303819491cacac1b75be0b426caca
       </Router>
     </WrapWithMobx>
   );

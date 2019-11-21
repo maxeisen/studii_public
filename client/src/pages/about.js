@@ -1,10 +1,11 @@
 import React from "react";
+import ContentWrapper from "../components/contentWrapper";
 
 function About() {
   return (
-    <div>
+    <ContentWrapper>
       <h2>About</h2>
-    </div>
+    </ContentWrapper>
   );
 }
 
