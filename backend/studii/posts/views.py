@@ -5,6 +5,9 @@ from rest_framework import status, permissions, viewsets
 from .models import Course, Post
 from .serializers import ContentSerializer, CourseSerializer, PostSerializer
 from studii.permissions import IsLoggedInUserOrAdmin, IsAdminUser
+from django.shortcuts import get_object_or_404
+
+# FIXME: Deleting post should delete content from S3 bucket (Does deleting post automaticly cascade to course post list?)
 
 
 class ContentUploadView(APIView):
@@ -28,7 +31,7 @@ class PostView(viewsets.ModelViewSet):
     def get_permissions(self):
         permission_classes = []
         if self.action == 'retrieve':
-            permission_classes = [permissions.AllowAny, ]
+            permission_classes = [permissions.IsAuthenticated]
         elif self.action == 'update' or self.action == 'partial_update' or self.action == 'create' or self.action == 'destroy':
             permission_classes = [IsLoggedInUserOrAdmin]
         elif self.action == 'list':
@@ -68,6 +71,8 @@ class PostView(viewsets.ModelViewSet):
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+# TODO: Use IsLoggedInUserOrAdmin to simplify
+
 
 class CourseView(viewsets.ModelViewSet):
     queryset = Course.objects.all()
@@ -75,9 +80,9 @@ class CourseView(viewsets.ModelViewSet):
 
     def get_permissions(self):
         permission_classes = []
-        if self.action == 'retrieve':
-            permission_classes = [permissions.AllowAny, ]
-        elif self.action == 'update' or self.action == 'partial_update' or self.action == 'create' or self.action == 'destroy':
+        if self.action == 'retrieve' or self.action == 'create':
+            permission_classes = [permissions.IsAuthenticated]
+        elif self.action == 'update' or self.action == 'partial_update' or self.action == 'destroy':
             permission_classes = [IsLoggedInUserOrAdmin]
         elif self.action == 'list':
             permission_classes = [IsAdminUser]
@@ -128,3 +133,17 @@ class CourseView(viewsets.ModelViewSet):
                 return Response(course_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+# TODO: Add pagination
+
+
+class ListPostsView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, pk, format=None):
+        lookup = {'pk': pk}
+        course = get_object_or_404(Course, **lookup)
+        posts = course.posts
+        serializer = PostSerializer(
+            posts, many=True, context={'request': request})
+        return Response(serializer.data)

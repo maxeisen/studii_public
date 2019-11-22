@@ -12,6 +12,8 @@ class User(AbstractUser):
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     username = models.CharField(blank=True, null=True, max_length=50)
     email = models.EmailField(('email address'), unique=True)
+    first_name = models.CharField(blank=False, max_length=50)
+    last_name = models.CharField(blank=False,  max_length=50)
 
     # Overwriting default username fied in Django's AbstractUser class. Allows for unique check for email and prevents usernames from being required.
     USERNAME_FIELD = 'email'

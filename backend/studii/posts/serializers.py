@@ -16,6 +16,9 @@ class CourseSerializer(serializers.HyperlinkedModelSerializer):
         fields = ("__all__")
 
 
+# TODO: Add validator for contentType
+
+
 class PostSerializer(serializers.HyperlinkedModelSerializer):
     content = ContentSerializer(required=True)
 
@@ -36,6 +39,8 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         contentInstance = Content.objects.create(**content_data)
         post = Post(content=contentInstance, **validated_data)
         post.save()
+        course = post.course
+        course.posts.add(post)
         return post
 
     def update(self, instance, validated_data):

@@ -111,6 +111,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'studiiDB',
+        'ENFORCE_SCHEMA': True,
     }
 }
 
