@@ -162,3 +162,4 @@ dmypy.json
 # VSCode Settings
 .vscode/
 backend/TESTING/CreatePostTest.http
+backend/TESTING/testImg.jpg
