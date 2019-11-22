@@ -6,6 +6,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 import uuid
 import datetime
 
+# TODO: Consider using embedded models to improve efficency
+
 
 class User(AbstractUser):
     id = models.UUIDField(
