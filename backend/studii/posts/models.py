@@ -1,6 +1,12 @@
-from django.db import models
+#from django.db import models
+from djongo import models
 import uuid
 
+
+# TODO: Add comments
+# TODO: Add likes
+# TODO: Add tags
+# TODO: Enable MongoDB Access control
 
 class Content(models.Model):
     fileContent = models.FileField(
@@ -20,6 +26,7 @@ class Content(models.Model):
             super(Content, self).save(*args, **kwargs)
 
 
+# TODO: Add contentType choice list?
 class Post(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
@@ -38,7 +45,7 @@ class Post(models.Model):
         return "{}: {}".format(self.title, self.contentType)
 
 
-# Expand this list before deployment
+# NOTE: Expand university list before deployment
 UNIVERISTY_CHOICES = (
     ('QU', "Queen's University"),
     ('UT', "University of Toronto"),
@@ -46,6 +53,8 @@ UNIVERISTY_CHOICES = (
     ('UWO', "University of Western Ontario"),
     ('UG', "Unviersity of Guelph"),
 )
+
+# TODO: Add members field
 
 
 class Course(models.Model):
@@ -58,6 +67,8 @@ class Course(models.Model):
     description = models.CharField(max_length=255, blank=True)
     creator = models.ForeignKey(
         'userAuth.User', on_delete=models.SET_NULL, null=True, related_name='course')
+    posts = models.ArrayReferenceField(
+        to=Post, on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
 
     def __str__(self):
         return "{}: {}".format(self.university, self.courseCode)
