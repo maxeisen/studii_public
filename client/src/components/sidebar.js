@@ -16,7 +16,7 @@ export default props => {
 
       <Link to="/notes">Notes</Link>
 
-      <Link to="/buddiis">Studii Budiis</Link>
+      <Link to="/buddiis">Studii Buddiis</Link>
 
       <Link to="/about">About</Link>
 

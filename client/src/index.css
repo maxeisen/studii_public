@@ -22,6 +22,12 @@ code {
     monospace;
 }
 
+.flex-container {
+  display: flex;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
 /* Individual item */
 .bm-item {
   display: inline-block;
