@@ -1,10 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import ContentWrapper from "./contentWrapper";
 import { css } from "@emotion/core";
 import Advertisement from "../components/advertisement";
 import IndividualPost from "../components/individualPost";
 
-const adFrequency = 10;
+const adFrequency = 2;
 
 const forumPosts = [
   {
@@ -63,35 +63,60 @@ const forumPosts = [
   }
 ];
 
-const Forum = () => (
+const adCluster = [
+  {
+    adId: 1,
+    title: "Need a tutor?",
+    advertiser: "ASUS Tutors",
+    adUrl: "https://www.queensu.ca",
+    content: "Blah blah blah blah"
+  },
+    {
+    adId: 2,
+    title: "You need a tutor!",
+    advertiser: "ASUS Tutors",
+    adUrl: "https://www.queensu.ca",
+    content: "Blah blah blah blah"
+  },
+    {
+    adId: 3,
+    title: "Do you need a tutor?",
+    advertiser: "ASUS Tutors",
+    adUrl: "https://www.queensu.ca",
+    content: "Blah blah blah blah"
+  },
+];
+
+const Forum = () => {
+  const [likedPosts, setLikedPosts] = useState([]);
+  const togglePostLike = (postID) => {
+    if (likedPosts.includes(postID)) {
+      setLikedPosts(likedPosts.filter(x => x !== postID))
+    }
+    else {
+      setLikedPosts([...likedPosts, postID])
+    }
+  };
+  return (
   <section id="forum">
     <ContentWrapper>
       <div>
         <div>
           {forumPosts.map(
             (
-              {
-                postID,
-                author,
-                course,
-                title,
-                content,
-                date,
-                numComments,
-                score
-              },
+              props,
               index
             ) => (
               <>
-                {index % adFrequency === 0 ? <Advertisement /> : ""}
-                <IndividualPost />
+                {index % adFrequency === 0 ? <Advertisement {...adCluster.pop(0)} /> : ""}
+                <IndividualPost liked={likedPosts.includes(props.postID)} setLiked={()=>togglePostLike(props.postID)} {...props}/>
               </>
             )
           )}
         </div>
       </div>
     </ContentWrapper>
-  </section>
-);
+  </section>);
+}
 
 export default Forum;

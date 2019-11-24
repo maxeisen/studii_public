@@ -8,9 +8,9 @@ export default function Forum() {
   return (
     <ContentWrapper>
       <div id="Forum">
-        <h1>Discussion Forum</h1>
-        <p>Here you can view recent forum posts relating to your courses.</p>
-        <div>
+        <h1>Forum</h1>
+        <p>Here you can view recent posts relating to your courses.</p>
+        <div css={css`padding-top: 15px`}>
           <ForumPosts />
         </div>
       </div>

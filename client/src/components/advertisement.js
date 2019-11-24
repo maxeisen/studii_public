@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import React from "react";
 import { css } from "@emotion/core";
 
-const Advertisement = ({ title, adID, advertiser, adURL, content }) => (
+const Advertisement = ({ adID, title, advertiser, adUrl, content }) => (
   <div
     key={title}
     css={css`
@@ -24,21 +24,15 @@ const Advertisement = ({ title, adID, advertiser, adURL, content }) => (
     >
       Sponsored
     </span>
-    <Link to={{ adURL }}>
-      <h2
-        css={css`
-          font-weight: 500;
-          color: black;
-        `}
-      >
-        {title}
+      <h2 css={css`padding-top: 10px`}>
+        <a href={adUrl}>{title}</a>
       </h2>
-    </Link>
     <p
-      css={`
+      css={css`
         font-size: 14px;
         color: #000000;
         line-height: 20px;
+        padding-top: 15px;
       `}
     >
       {content}

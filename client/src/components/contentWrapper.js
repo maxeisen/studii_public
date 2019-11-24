@@ -2,7 +2,7 @@ import React from "react";
 
 const ContentWrapper = props => (
   <div
-    css={{
+    style={{
       maxWidth: "1400px",
       marginLeft: "auto",
       marginRight: "auto",
