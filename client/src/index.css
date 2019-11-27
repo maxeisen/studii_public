@@ -93,19 +93,3 @@ code {
 .bm-overlay {
   background: rgba(0, 0, 0, 0.3);
 }
-
-.bestComment {
-  width: 80%;
-  padding: 20px 20px 0px 20px;
-  border: 2px solid lightgreen;
-  border-radius: 5px;
-  margin: 20px auto 20px auto;
-}
-
-.verifiedComment {
-  width: 80%;
-  padding: 20px 20px 0px 20px;
-  border: 2px solid #8ed8ff;
-  border-radius: 5px;
-  margin: 20px auto 20px auto;
-}
