@@ -75,7 +75,7 @@ function Signup({ store }) {
                 margin-bottom: 1rem;
               `}
             >
-              <label>email</label>
+              <label>Email</label>
               <br />
               <input
                 value={email}

@@ -1,16 +1,20 @@
 import React from "react";
 import { css } from "@emotion/core";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { MdPerson } from "react-icons/md";
 import Logo from "../assets/Logo.svg";
 import { observer, inject } from "mobx-react";
 
 function Header({ store }) {
+
+  const history = useHistory();
+
   const logout = () => {
     store.SetEmail("");
     store.SetToken("");
+    history.push("/");
   };
   return (
     <div

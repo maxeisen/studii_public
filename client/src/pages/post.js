@@ -99,7 +99,7 @@ export default function Post(props) {
   return (
     <section id="forum">
       <ContentWrapper>
-        <a href="/forum">
+        <Link to="/forum">
           <h1
             css={css`
               font-weight: 500;
@@ -108,7 +108,7 @@ export default function Post(props) {
           >
             <b>Back to Forum</b>
           </h1>
-        </a>
+        </Link>
         <div>
           <div>
             <div

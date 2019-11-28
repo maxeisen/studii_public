@@ -30,9 +30,7 @@ function Login({ store }) {
           setMessage("You're logged in! Redirecting...");
           store.SetToken(r.token);
           store.SetEmail(email);
-          setTimeout(() => {
-            history.push("/dashboard");
-          }, 3000);
+          history.push("/forum");
         } else {
           throw new Error("No token received");
         }
@@ -66,7 +64,7 @@ function Login({ store }) {
                 margin-bottom: 1rem;
               `}
             >
-              <label>email</label>
+              <label>Email</label>
               <br />
               <input
                 value={email}

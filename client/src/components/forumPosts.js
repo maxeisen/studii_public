@@ -108,7 +108,7 @@ const Forum = () => {
               index
             ) => (
               <>
-                {index % adFrequency === 0 ? <Advertisement {...adCluster.pop(0)} /> : ""}
+                {index % adFrequency === 0 ? <Advertisement {...adCluster[index/adFrequency]} /> : ""}
                 <IndividualPost liked={likedPosts.includes(props.postID)} setLiked={()=>togglePostLike(props.postID)} {...props}/>
               </>
             )
