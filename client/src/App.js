@@ -8,15 +8,16 @@ import Index from "./pages/index";
 import Forum from "./pages/forum";
 import Sidebar from "./components/sidebar";
 import Post from "./pages/post";
-
+import WrapWithMobx from "./components/wrapWithMobx";
+import ScrollToTop from "./components/ScrollToTop";
 import Header from "./components/header";
 
-import WrapWithMobx from "./components/wrapWithMobx";
 
 export default function BasicExample() {
   return (
     <WrapWithMobx>
       <Router>
+        <ScrollToTop/>
         <div>
           <Switch>
             <Route exact path="/">

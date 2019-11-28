@@ -17,12 +17,14 @@ const Advertisement = ({ adID, title, advertiser, adUrl, content }) => (
     <span
       align="right"
       css={css`
-        font-size: 10px;
-        color: #484848;
+        font-size: 13px;
+        color: #0000EE;
         line-height: 20px;
       `}
     >
-      Sponsored
+      <a href={adUrl}>
+        Sponsored
+      </a>
     </span>
       <h2 css={css`padding-top: 10px`}>
         <a href={adUrl}>{title}</a>

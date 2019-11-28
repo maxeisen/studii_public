@@ -103,22 +103,23 @@ function Home() {
             </div>
             <div>
               <h2>A study space made by students, for students.</h2>
-              <p>
-                Use this paragraph to explain about Studii. Should discuss the
-                study body pairing, making quizzes, posting notes, and having
-                online students. Can search for course-related content, or
-                search by content.
+              <p css={css`line-height: 25px;`}>
+              For all your course questions, we offer a collaborative forum that
+              provides both peer support and expert advice. With our open and closed
+              subforums, you can get answers to any question you have.
               </p>
             </div>
           </section>
           <section>
             <div>
               <h2>An emphasis on collaborative learning</h2>
-              <p>
-                Use this paragraph to explain about Studii. Should discuss the
-                study body pairing, making quizzes, posting notes, and having
-                online students. Can search for course-related content, or
-                search by content.
+              <p css={css`line-height: 25px;`}>
+              Get answers from verified experts who know what they’re talking about.
+              Build up your reputation so you can become a verified contributor.
+              Group up with other students  who are studying the same courses
+              Get matched with an expert tutor if your group needs some extra help.
+
+
               </p>
             </div>
             <div>

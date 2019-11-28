@@ -289,7 +289,7 @@ export default function Post(props) {
                           line-height: 20px;
                         `}
                       >
-                        Best answer
+                        Best Reponse
                       </span>
                     ) : (
                       ""

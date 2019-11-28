@@ -8,6 +8,61 @@ const adFrequency = 2;
 
 const forumPosts = [
   {
+    postID: "2",
+    author: "MEisen",
+    course: "CISC 365",
+    title: "What is Huffman Encoding?",
+    content:
+      "Really struggling with this assignment. Someone please help me with implementing this Huffman Encoding algorithm cause I have no clue what I'm doing. Thanks!",
+    date: "October 29, 2019",
+    numComments: 2,
+    score: 4
+  },
+  {
+    postID: "3",
+    author: "ConnorFrosh",
+    course: "General",
+    title: "What exactly is computer science? and why am I studying it",
+    content:
+      "I'm starting to rethink this whole becoming a compsci major thing. Anyone have any advice?",
+    date: "October 26, 2019",
+    numComments: 6,
+    score: 11
+  },
+  {
+    postID: "6",
+    author: "NetworkMan",
+    course: "CMPE 452",
+    title: "Should I do PCA analysis for my MLP?",
+    content: 
+      "I am working on a project where I need to build my own multi-layer perceptron neural network, and I need some help. I want to...",
+    date: "October 25, 2019",
+    numComments: 3,
+    score: 6
+  },
+  {
+    postID: "7",
+    author: "ConnorFrosh",
+    course: "ARTH 101",
+    title: "Why were the Flourentine Medidi family important to Renaissance?",
+    content: 
+      "What the title says... I really need help in this course :/",
+    date: "October 23, 2019",
+    numComments: 2,
+    score: 0
+  },
+  {
+    postID: "8",
+    author: "EvolutionIsntReal",
+    course: "BIOL 221",
+    title: "Isn't evolution just a theory that remains unproven?",
+    content: 
+      "I understand that evolution is a theory and that it explains how humans developed to be how they are today? What I don't understand is...",
+    date: "October 21, 2019",
+    numComments: 24,
+    score: -53
+  },
+  {
     postID: "1",
     author: "Student123",
     course: "CISC 220",
@@ -19,33 +74,12 @@ const forumPosts = [
     score: 15
   },
   {
-    postID: "2",
-    author: "MEisen",
-    course: "CISC 365",
-    title: "Wtf is Huffman Encoding?",
-    content:
-      "Really struggling with this assignment. Someone please tell me how to implement this Huffman Encoding algorithm cause I have no clue what I'm doing. Thanks!",
-    date: "October 29, 2019",
-    numComments: 2,
-    score: 4
-  },
-  {
-    postID: "3",
-    author: "ConnorTheFrosh",
-    course: "General",
-    title: "What exactly is computer science? and why am I studying it",
-    content:
-      "I'm starting to rethink this whole becoming a compsci major thing. Anyone have any advice?",
-    date: "October 26, 2019",
-    numComments: 6,
-    score: 11
-  },
-  {
     postID: "4",
     author: "Hill_Ross",
     course: "CISC 499",
     title: "Can I get some thesis suggestions? I'm lost",
-    content: "Just read the title. Anything helps!!!",
+    content: 
+      "Just read the title. Anything helps!!!",
     date: "October 20, 2019",
     numComments: 7,
     score: 12
@@ -66,25 +100,33 @@ const forumPosts = [
 const adCluster = [
   {
     adId: 1,
-    title: "Need a tutor?",
-    advertiser: "ASUS Tutors",
-    adUrl: "https://www.queensu.ca",
-    content: "Blah blah blah blah"
-  },
+    title: "EngLinks Tutoring",
+    advertiser: "EngLinks",
+    adUrl: "https://englinks.ca/",
+    content:
+      "Queen's Engineering students tutoring and providing resources for other Queen's Engineering students!"
+    },
     {
     adId: 2,
-    title: "You need a tutor!",
+    title: "ArtSci Students... ASUS is here to help!",
     advertiser: "ASUS Tutors",
-    adUrl: "https://www.queensu.ca",
-    content: "Blah blah blah blah"
-  },
+    adUrl: "https://www.queensasus.com/tutoring",
+    content: "Get the best on-campus ArtSci course tutoring services with ASUS Tutors."
+    },
     {
     adId: 3,
-    title: "Do you need a tutor?",
-    advertiser: "ASUS Tutors",
-    adUrl: "https://www.queensu.ca",
-    content: "Blah blah blah blah"
-  },
+    title: "Calling all Struggling Commerce Students!",
+    advertiser: "BrainTrust",
+    adUrl: "https://www.facebook.com/braintrusttutoring/",
+    content: "BrainTrust will provide you with help for any Commerce course you're struggling with."
+    },
+    {
+      adId: 4,
+      title: "CompSci students - get the CompSci Advantage!",
+      advertiser: "CompSci Advantage",
+      adUrl: "https://www.compsciadvantage.com/",
+      content: "CompSci Advantage will help you master even the toughest CISC courses. From 101 to 452, we got you!"
+    },
 ];
 
 const Forum = () => {
