@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import ContentWrapper from "./contentWrapper";
 import { css } from "@emotion/core";
 import Advertisement from "../components/advertisement";
@@ -10,6 +10,7 @@ const forumPosts = [
   {
     postID: "2",
     author: "MEisen",
+    email: "MEisen@queensu.ca",
     course: "CISC 365",
     title: "What is Huffman Encoding?",
     content:
@@ -21,6 +22,7 @@ const forumPosts = [
   {
     postID: "3",
     author: "ConnorFrosh",
+    email: "ConnorFrosh@queensu.ca",
     course: "General",
     title: "What exactly is computer science? and why am I studying it",
     content:
@@ -32,9 +34,10 @@ const forumPosts = [
   {
     postID: "6",
     author: "NetworkMan",
+    email: "NetworkMan@queensu.ca",
     course: "CMPE 452",
     title: "Should I do PCA analysis for my MLP?",
-    content: 
+    content:
       "I am working on a project where I need to build my own multi-layer perceptron neural network, and I need some help. I want to...",
     date: "October 25, 2019",
     numComments: 3,
@@ -43,10 +46,10 @@ const forumPosts = [
   {
     postID: "7",
     author: "ConnorFrosh",
+    email: "ConnorFrosh@queensu.ca",
     course: "ARTH 101",
     title: "Why were the Flourentine Medidi family important to Renaissance?",
-    content: 
-      "What the title says... I really need help in this course :/",
+    content: "What the title says... I really need help in this course :/",
     date: "October 23, 2019",
     numComments: 2,
     score: 0
@@ -54,9 +57,10 @@ const forumPosts = [
   {
     postID: "8",
     author: "EvolutionIsntReal",
+    email: "EvolutionIsntReal@queensu.ca",
     course: "BIOL 221",
     title: "Isn't evolution just a theory that remains unproven?",
-    content: 
+    content:
       "I understand that evolution is a theory and that it explains how humans developed to be how they are today? What I don't understand is...",
     date: "October 21, 2019",
     numComments: 24,
@@ -65,6 +69,7 @@ const forumPosts = [
   {
     postID: "1",
     author: "Student123",
+    email: "Student123@queensu.ca",
     course: "CISC 220",
     title: "What is a command-line interface?",
     content:
@@ -76,10 +81,10 @@ const forumPosts = [
   {
     postID: "4",
     author: "Hill_Ross",
+    email: "ross.hill@queensu.ca",
     course: "CISC 499",
     title: "Can I get some thesis suggestions? I'm lost",
-    content: 
-      "Just read the title. Anything helps!!!",
+    content: "Just read the title. Anything helps!!!",
     date: "October 20, 2019",
     numComments: 7,
     score: 12
@@ -87,6 +92,7 @@ const forumPosts = [
   {
     postID: "5",
     author: "PattyLen",
+    email: "PattyLen@queensu.ca",
     course: "General",
     title: "Django vs. Django Unchained",
     content:
@@ -105,60 +111,66 @@ const adCluster = [
     adUrl: "https://englinks.ca/",
     content:
       "Queen's Engineering students tutoring and providing resources for other Queen's Engineering students!"
-    },
-    {
+  },
+  {
     adId: 2,
     title: "ArtSci Students... ASUS is here to help!",
     advertiser: "ASUS Tutors",
     adUrl: "https://www.queensasus.com/tutoring",
-    content: "Get the best on-campus ArtSci course tutoring services with ASUS Tutors."
-    },
-    {
+    content:
+      "Get the best on-campus ArtSci course tutoring services with ASUS Tutors."
+  },
+  {
     adId: 3,
     title: "Calling all Struggling Commerce Students!",
     advertiser: "BrainTrust",
     adUrl: "https://www.facebook.com/braintrusttutoring/",
-    content: "BrainTrust will provide you with help for any Commerce course you're struggling with."
-    },
-    {
-      adId: 4,
-      title: "CompSci students - get the CompSci Advantage!",
-      advertiser: "CompSci Advantage",
-      adUrl: "https://www.compsciadvantage.com/",
-      content: "CompSci Advantage will help you master even the toughest CISC courses. From 101 to 452, we got you!"
-    },
+    content:
+      "BrainTrust will provide you with help for any Commerce course you're struggling with."
+  },
+  {
+    adId: 4,
+    title: "CompSci students - get the CompSci Advantage!",
+    advertiser: "CompSci Advantage",
+    adUrl: "https://www.compsciadvantage.com/",
+    content:
+      "CompSci Advantage will help you master even the toughest CISC courses. From 101 to 452, we got you!"
+  }
 ];
 
 const Forum = () => {
   const [likedPosts, setLikedPosts] = useState([]);
-  const togglePostLike = (postID) => {
+  const togglePostLike = postID => {
     if (likedPosts.includes(postID)) {
-      setLikedPosts(likedPosts.filter(x => x !== postID))
-    }
-    else {
-      setLikedPosts([...likedPosts, postID])
+      setLikedPosts(likedPosts.filter(x => x !== postID));
+    } else {
+      setLikedPosts([...likedPosts, postID]);
     }
   };
   return (
-  <section id="forum">
-    <ContentWrapper>
-      <div>
+    <section id="forum">
+      <ContentWrapper>
         <div>
-          {forumPosts.map(
-            (
-              props,
-              index
-            ) => (
+          <div>
+            {forumPosts.map((props, index) => (
               <>
-                {index % adFrequency === 0 ? <Advertisement {...adCluster[index/adFrequency]} /> : ""}
-                <IndividualPost liked={likedPosts.includes(props.postID)} setLiked={()=>togglePostLike(props.postID)} {...props}/>
+                {index % adFrequency === 0 ? (
+                  <Advertisement {...adCluster[index / adFrequency]} />
+                ) : (
+                  ""
+                )}
+                <IndividualPost
+                  liked={likedPosts.includes(props.postID)}
+                  setLiked={() => togglePostLike(props.postID)}
+                  {...props}
+                />
               </>
-            )
-          )}
+            ))}
+          </div>
         </div>
-      </div>
-    </ContentWrapper>
-  </section>);
-}
+      </ContentWrapper>
+    </section>
+  );
+};
 
 export default Forum;

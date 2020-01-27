@@ -1,10 +1,14 @@
 import React from "react";
+import { observer, inject } from "mobx-react";
 import ThumbUpIcon from "../assets/Icons/thumbsup.svg";
 import CommentIcon from "../assets/Icons/comment.svg";
+import TrashIcon from "../assets/Icons/trash.svg";
 import { Link } from "react-router-dom";
 import { css } from "@emotion/core";
 
 const IndividualPost = ({
+  store,
+  email,
   title,
   postID,
   score,
@@ -24,6 +28,30 @@ const IndividualPost = ({
       border: 2px solid lightgray;
       border-radius: 5px;
       margin: 20px 20px 20px 20px;
+
+      button,
+      a.button {
+        font-size: 11px;
+        color: #757575;
+        line-height: 20px;
+        background-color: white;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        padding: 0.3rem 0.5rem;
+        margin-right: 0.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.75;
+        }
+        > * {
+          display: inline-block;
+          margin: 0 0.2rem;
+          padding: 0;
+        }
+      }
     `}
   >
     <span
@@ -36,18 +64,30 @@ const IndividualPost = ({
     >
       {date}
     </span>
-    <h2 css={css`font-size: 20px; padding-top: 15px;`}>
-      <b>{author}</b> to <b css={css`color: #00A7FF;`}>{course}</b>
+    <h2
+      css={css`
+        font-size: 20px;
+        padding-top: 15px;
+      `}
+    >
+      <strong>{author}</strong> to{" "}
+      <strong
+        css={css`
+          color: #00a7ff;
+        `}
+      >
+        {course}
+      </strong>
     </h2>
     <Link to={`/post/${postID}`}>
       <h2
         css={css`
           font-weight: 500;
-          color: #00A7FF;
+          color: #00a7ff;
           padding-top: 10px;
         `}
       >
-        <b>{title}</b>
+        <strong>{title}</strong>
       </h2>
     </Link>
     <p
@@ -64,50 +104,40 @@ const IndividualPost = ({
     <div class="flex-container">
       <button
         className={liked ? "liked" : ""}
-        onClick={()=>setLiked(!liked)}
+        onClick={() => setLiked(!liked)}
         css={css`
-          fontsize: 14px;
-          color: #757575;
-          line-height: 20px;
-          background-color: white;
-          border-radius: 4px;
-          padding: 0.2rem 0.5rem;
           ${liked ? "border: 2px solid #555" : "border: 2px solid #eee;"}
         `}
       >
         <img src={ThumbUpIcon} width="20px" />{" "}
-        <b>
-          <sup>{liked ? score + 1 : score}</sup>
-        </b>
+        <strong>{liked ? score + 1 : score}</strong>
       </button>
-      <div
-        css={css`
-          position: relative;
-          padding-left: 2%;
-          font-size: 14px;
-          color: #757575;
-          line-height: 20px;
-        `}
-      >
-      <button
-        css={css`
-          fontsize: 14px;
-          color: #757575;
-          line-height: 20px;
-          background-color: white;
-          border-radius: 4px;
-          padding: 0.2rem 0.5rem;
-          border: 2px solid #eee;
-        `}
-      >
-        <img src={CommentIcon} width="20px" css={css`padding-top: 7%;`}/>{" "}
-        <b>
-          <sup>{numComments}</sup>
-        </b>
-      </button>
+      <Link to={`/post/${postID}`} class="button">
+        <img
+          src={CommentIcon}
+          width="20px"
+          css={css`
+            padding-top: 7%;
+          `}
+        />{" "}
+        <strong>{numComments}</strong>
+      </Link>
+      {store.UserEmail !== email ? (
+        ""
+      ) : (
+        <button>
+          <img
+            src={TrashIcon}
+            width="15px"
+            css={css`
+              padding-top: 7%;
+            `}
+          />{" "}
+          <strong>Delete</strong>
+        </button>
+      )}
     </div>
-  </div>
   </div>
 );
 
-export default IndividualPost;
+export default inject(`store`)(observer(IndividualPost));
