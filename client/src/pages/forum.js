@@ -9,8 +9,18 @@ export default function Forum() {
     <ContentWrapper>
       <div id="Forum">
         <h1>Forum</h1>
-        <p>Here you can view recent posts relating to your courses.</p>
-        <div css={css`padding-top: 15px`}>
+        <p
+          css={css`
+            padding-top: 1rem;
+          `}
+        >
+          Here you can view recent posts relating to your courses.
+        </p>
+        <div
+          css={css`
+            padding-top: 1.5rem;
+          `}
+        >
           <ForumPosts />
         </div>
       </div>

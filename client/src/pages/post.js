@@ -1,40 +1,28 @@
-import React, { useEffect, useState } from "react";
-import Sidebar from "../components/sidebar";
+import React, { useState } from "react";
+import { observer, inject } from "mobx-react";
 import { Link } from "react-router-dom";
 import ContentWrapper from "../components/contentWrapper";
 import { css } from "@emotion/core";
 import ThumbUpIcon from "../assets/Icons/thumbsup.svg";
 import ThumbDownIcon from "../assets/Icons/thumbsdown.svg";
+import TrashIcon from "../assets/Icons/trash.svg";
 import CommentIcon from "../assets/Icons/comment.svg";
 
-export default function Post(props) {
-  // TODO: fix this so it doesn't crash the app
-  // useEffect(() => {
-  //   setPostData({
-  //     postID: "1",
-  //     author: "Student123",
-  //     course: "CISC 220",
-  //     title: "What is a command-line interface?",
-  //     content:
-  //       "Hi guys, I'm reading over some notes from this week's lectures and I have no clue what a command-line interface is. Can anyone offer some help?",
-  //     date: "November 4, 2019",
-  //     numComments: 4,
-  //     score: 15
-  //   });
-  // });
-
+function Post({ store }) {
   const [likedPosts, setLikedPosts] = useState([]);
+
   const togglePostLike = postID => {
     if (likedPosts.includes(postID)) {
-      setLikedPosts(likedPosts.filter(x => x !== postID));
+      setLikedPosts(likedPosts => likedPosts.filter(x => x !== postID));
     } else {
-      setLikedPosts([...likedPosts, postID]);
+      setLikedPosts(likedPosts => [...likedPosts, postID]);
     }
   };
 
   const postData = {
     postID: "1",
     author: "Student123",
+    email: "student123@queensu.ca",
     course: "CISC 220",
     title: "What is a command-line interface?",
     content:
@@ -46,6 +34,7 @@ export default function Post(props) {
       {
         id: 1,
         author: "Student135",
+        email: "Student135@queensu.ca",
         verified: false,
         date: "November 5, 2019",
         score: 16,
@@ -55,6 +44,7 @@ export default function Post(props) {
       {
         id: 2,
         author: "Tutor12",
+        email: "Tutor12@queensu.ca",
         verified: true,
         date: "November 6, 2019",
         score: 12,
@@ -63,16 +53,18 @@ export default function Post(props) {
       },
       {
         id: 3,
-        author: "Student420",
+        author: "Hill_Ross",
+        email: "ross.hill@queensu.ca",
         verified: false,
         date: "November 6, 2019",
         score: -5,
-        content: "boooo queens bad western good",
+        content: "boooo western bad queens good",
         bestComment: false
       },
       {
         id: 4,
         author: "Student404",
+        email: "Student404@queensu.ca",
         verified: false,
         date: "November 5, 2019",
         score: 0,
@@ -167,61 +159,65 @@ export default function Post(props) {
               <div class="flex-container">
                 <button
                   className={likedPosts.includes("p" + postID)}
-                  onClick={() => setLikedPosts("p" + postID)}
+                  onClick={() => togglePostLike("p" + postID)}
                   css={css`
-                    fontsize: 14px;
-                    color: #757575;
-                    line-height: 20px;
-                    background-color: white;
-                    border-radius: 4px;
-                    padding: 0.2rem 0.5rem;
                     ${likedPosts.includes("p" + postID)
-                      ? "border: 2px solid #555"
-                      : "border: 2px solid #eee;"}
+                      ? "border-color: #555"
+                      : ""}
                   `}
                 >
                   <img src={ThumbUpIcon} width="20px" />{" "}
-                  <b>
-                    <sup>
-                      {likedPosts.includes("p" + postID) ? score + 1 : score}
-                    </sup>
-                  </b>
+                  <strong>
+                    {likedPosts.includes("p" + postID) ? score + 1 : score}
+                  </strong>
                 </button>
-                <div
-                  css={css`
-                    position: relative;
-                    padding-left: 2%;
-                    font-size: 14px;
-                    color: #757575;
-                    line-height: 20px;
-                  `}
-                >
-                  <button
+
+                <button>
+                  <img
+                    src={CommentIcon}
+                    width="20px"
                     css={css`
-                      fontsize: 14px;
-                      color: #757575;
-                      line-height: 20px;
-                      background-color: white;
-                      border-radius: 4px;
-                      padding: 0.2rem 0.5rem;
-                      border: 2px solid #eee;
+                      padding-top: 7%;
                     `}
-                  >
-                    <img
-                      src={CommentIcon}
-                      width="20px"
-                      css={css`
-                        padding-top: 7%;
-                      `}
-                    />{" "}
-                    <b>
-                      <sup>{numComments}</sup>
-                    </b>
-                  </button>
-                </div>
+                  />{" "}
+                  <strong>{numComments}</strong>
+                </button>
               </div>
             </div>
           </div>
+        </div>
+        <div
+          css={css`
+            padding: 1.5rem;
+          `}
+        >
+          <label
+            css={css`
+              font-weight: bold;
+            `}
+            htmlFor="comment"
+          >
+            Comment
+          </label>
+          <br />
+          <textarea
+            css={css`
+              margin: 1rem 0;
+              padding: 1rem;
+              min-width: 80%;
+            `}
+            id="comment"
+            name="comment"
+          />
+          <br />
+          <button
+            css={css`
+              color: #333;
+            `}
+            onClick={() => alert("API call then refresh")}
+          >
+            Submit
+          </button>
         </div>
         <div>
           <h1
@@ -233,7 +229,16 @@ export default function Post(props) {
           </h1>
           <div>
             {postData.comments.map(
-              ({ id, author, verified, date, score, content, bestComment }) => (
+              ({
+                id,
+                author,
+                verified,
+                date,
+                score,
+                content,
+                bestComment,
+                email
+              }) => (
                 <div
                   key={title}
                   css={css`
@@ -320,53 +325,41 @@ export default function Post(props) {
                       }
                       onClick={() => togglePostLike("c" + id)}
                       css={css`
-                        fontsize: 14px;
-                        color: #757575;
-                        line-height: 20px;
-                        background-color: white;
-                        border-radius: 4px;
-                        padding: 0.2rem 0.5rem;
                         ${likedPosts.includes("c" + id)
-                          ? "border: 2px solid #555"
-                          : "border: 2px solid #eee;"}
+                          ? "border-color: #555;"
+                          : ""}
                       `}
                     >
                       <img src={ThumbUpIcon} width="20px" />{" "}
-                      <b>
-                        <sup>
-                          {likedPosts.includes("c" + id) ? score + 1 : score}
-                        </sup>
-                      </b>
+                      <strong>
+                        {likedPosts.includes("c" + id) ? score + 1 : score}
+                      </strong>
                     </button>
-                    <div
-                      css={css`
-                        position: relative;
-                        padding-left: 2%;
-                        font-size: 14px;
-                        color: #757575;
-                        line-height: 20px;
-                      `}
-                    >
-                      <button
+
+                    <button>
+                      <img
+                        src={ThumbDownIcon}
+                        width="20px"
                         css={css`
-                          fontsize: 14px;
-                          color: #757575;
-                          line-height: 20px;
-                          background-color: white;
-                          border-radius: 4px;
-                          padding: 0.2rem 0.5rem;
-                          border: 2px solid #eee;
+                          padding-top: 7%;
                         `}
-                      >
+                      />{" "}
+                    </button>
+
+                    {email === store.UserEmail ? (
+                      <button>
                         <img
-                          src={ThumbDownIcon}
-                          width="20px"
+                          src={TrashIcon}
+                          width="15px"
                           css={css`
                             padding-top: 7%;
                           `}
                         />{" "}
+                        <strong>Delete</strong>
                       </button>
-                    </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               )
@@ -377,3 +370,5 @@ export default function Post(props) {
     </section>
   );
 }
+
+export default inject(`store`)(observer(Post));

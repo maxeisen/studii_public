@@ -149,26 +149,57 @@ const Forum = () => {
   };
   return (
     <section id="forum">
-      <ContentWrapper>
+      <div
+        css={css`
+          padding: 1.5rem;
+        `}
+      >
+        <label
+          css={css`
+            font-weight: bold;
+          `}
+          htmlFor="question"
+        >
+          Ask a Question
+        </label>
+        <br />
+        <textarea
+          css={css`
+            margin: 1rem 0;
+            padding: 1rem;
+            min-width: 80%;
+          `}
+          id="question"
+          name="question"
+        />
+        <br />
+        <button
+          css={css`
+            color: #333;
+          `}
+          onClick={() => alert("API call then navigate to created post")}
+        >
+          Submit
+        </button>
+      </div>
+      <div>
         <div>
-          <div>
-            {forumPosts.map((props, index) => (
-              <>
-                {index % adFrequency === 0 ? (
-                  <Advertisement {...adCluster[index / adFrequency]} />
-                ) : (
-                  ""
-                )}
-                <IndividualPost
-                  liked={likedPosts.includes(props.postID)}
-                  setLiked={() => togglePostLike(props.postID)}
-                  {...props}
-                />
-              </>
-            ))}
-          </div>
+          {forumPosts.map((props, index) => (
+            <>
+              {index % adFrequency === 0 ? (
+                <Advertisement {...adCluster[index / adFrequency]} />
+              ) : (
+                ""
+              )}
+              <IndividualPost
+                liked={likedPosts.includes(props.postID)}
+                setLiked={() => togglePostLike(props.postID)}
+                {...props}
+              />
+            </>
+          ))}
         </div>
-      </ContentWrapper>
+      </div>
     </section>
   );
 };

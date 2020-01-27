@@ -28,30 +28,6 @@ const IndividualPost = ({
       border: 2px solid lightgray;
       border-radius: 5px;
       margin: 20px 20px 20px 20px;
-
-      button,
-      a.button {
-        font-size: 11px;
-        color: #757575;
-        line-height: 20px;
-        background-color: white;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-        padding: 0.3rem 0.5rem;
-        margin-right: 0.5rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        &:hover {
-          opacity: 0.75;
-        }
-        > * {
-          display: inline-block;
-          margin: 0 0.2rem;
-          padding: 0;
-        }
-      }
     `}
   >
     <span
