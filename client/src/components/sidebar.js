@@ -10,13 +10,9 @@ export default props => {
 
       <Link to="/"><img src={Logo} width={100}/></Link>
 
-      <Link to="/dashboard">Dashboard</Link>
+      <Link to="/forum">Forum</Link>
 
-      <Link to="/forum">Discussion Forum</Link>
-
-      <Link to="/notes">Notes</Link>
-
-      <Link to="/buddiis">Studii Buddiis</Link>
+      <Link to="/buddiis">Studii Buddies</Link>
 
       <Link to="/about">About</Link>
 

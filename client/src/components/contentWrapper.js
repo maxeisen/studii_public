@@ -2,8 +2,8 @@ import React from "react";
 
 const ContentWrapper = props => (
   <div
-    css={{
-      maxWidth: "1400px",
+    style={{
+      maxWidth: "1200px",
       marginLeft: "auto",
       marginRight: "auto",
       paddingLeft: "145px",
