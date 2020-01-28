@@ -1,4 +1,4 @@
-from django.db import models
+from djongo import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -6,7 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 import uuid
 import datetime
 
-# TODO: Consider using embedded models to improve efficency
+# TODO: Consider using embedded models to improve efficiency
 
 
 class User(AbstractUser):
@@ -16,8 +16,15 @@ class User(AbstractUser):
     email = models.EmailField(('email address'), unique=True)
     first_name = models.CharField(blank=False, max_length=50)
     last_name = models.CharField(blank=False,  max_length=50)
+    clout = models.IntegerField(default=0)
+    courses = models.ArrayReferenceField(
+        to='posts.Course', on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
+    posts = models.ArrayReferenceField(
+        to='posts.Post', on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
+    comments = models.ArrayReferenceField(
+        to='posts.Comment', on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
 
-    # Overwriting default username fied in Django's AbstractUser class. Allows for unique check for email and prevents usernames from being required.
+    # Overwriting default username field in Django's AbstractUser class. Allows for unique check for email and prevents usernames from being required.
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 

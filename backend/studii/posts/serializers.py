@@ -1,13 +1,13 @@
 from rest_framework import serializers
-from .models import Content, Course, Post
-from posts.posts_validators import validate_content as content_validator
+from .models import Content, Course, Post, Comment
+from posts.posts_validators import validate_content as post_validator
 from django.core import exceptions
 
 
 class ContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Content
-        fields = ('fileContent', 'textContent')
+        fields = ("__all__")
 
 
 class CourseSerializer(serializers.HyperlinkedModelSerializer):
@@ -16,7 +16,9 @@ class CourseSerializer(serializers.HyperlinkedModelSerializer):
         fields = ("__all__")
 
 
-# TODO: Add validator for contentType
+class JoinOrLeaveCourseSerializer(serializers.Serializer):
+    course = serializers.HyperlinkedRelatedField(
+        required=True, view_name='course-detail', queryset=Course.objects.all())
 
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
@@ -24,15 +26,17 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('url', 'id', 'dateTimePosted', 'dateTimeEdited', 'contentType', 'title',
-                  'description', 'author', 'course', 'content')
+        fields = ('url', 'id', 'dateTimePosted', 'dateTimeEdited', 'title',
+                  'author', 'course', 'content', 'comments', 'likesCount', 'likes')
+        read_only_fields = ('url', 'id', 'dateTimePosted',
+                            'dateTImeEdited', 'comments', 'likesCount', 'likes')
 
-    def validate_content(self, value):
+    """ def validate(self, value):
         try:
-            content_validator(value)
+            post_validator(value)
         except exceptions.ValidationError as exc:
             raise exceptions.ValidationError(str(exc))
-        return value
+        return value """
 
     def create(self, validated_data):
         content_data = validated_data.pop('content')
@@ -41,20 +45,54 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         post.save()
         course = post.course
         course.posts.add(post)
+        author = post.author
+        author.posts.add(post)
         return post
 
     def update(self, instance, validated_data):
         content_data = validated_data.pop('content')
         content = instance.content
         content.fileContent = content_data.get(
-            'fileContent', content.fileContent)
+            'attachment', content.fileContent)
         content.textContent = content_data.get(
             'textContent', content.textContent)
 
         instance.title = validated_data.get('title', instance.title)
-        instance.description = validated_data.get(
-            'description', instance.description)
+        content.save()
+        instance.save()
+        return instance
 
+
+class CommentSerializer(serializers.HyperlinkedModelSerializer):
+    content = ContentSerializer(required=True)
+
+    class Meta:
+        model = Comment
+        fields = ('url', 'id', 'author', 'dateTimePosted', 'dateTimeEdited', 'parentPost',
+                  'content', 'likesCount', 'likes')
+        read_only_fields = ('url', 'id', 'dateTimePosted',
+                            'dateTImeEdited', 'likesCount', 'likes')
+
+    def create(self, validated_data):
+        content_data = validated_data.pop('content')
+        contentInstance = Content.objects.create(**content_data)
+        comment = Comment(content=contentInstance, **validated_data)
+        comment.save()
+        parentPost = comment.parentPost
+        parentPost.comments.add(comment)
+        author = comment.author
+        author.comments.add(comment)
+        return comment
+
+    def update(self, instance, validated_data):
+        content_data = validated_data.pop('content')
+        content = instance.content
+        content.fileContent = content_data.get(
+            'attachment', content.fileContent)
+        content.textContent = content_data.get(
+            'textContent', content.textContent)
+
+        instance.title = validated_data.get('title', instance.title)
         content.save()
         instance.save()
         return instance

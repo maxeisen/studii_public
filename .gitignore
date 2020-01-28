@@ -164,3 +164,4 @@ dmypy.json
 backend/TESTING/CreatePostTest.http
 backend/TESTING/testImg.jpg
 backend/studii/TODO_LIST.txt
+backend/TESTING/TODO_LIST.txt
