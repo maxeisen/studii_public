@@ -4,7 +4,7 @@ import { css } from "@emotion/core";
 import ThumbUpIcon from "../assets/Icons/thumbsup.svg";
 import ThumbDownIcon from "../assets/Icons/thumbsdown.svg";
 import TrashIcon from "../assets/Icons/trash.svg";
-import ReactTooltip from "react-tooltip";
+import UserPopup from "./userPopup";
 
 const Comment = ({
   id,
@@ -22,7 +22,7 @@ const Comment = ({
   <div
     key={id}
     css={css`
-      margin: 1rem;
+      margin-bottom: 1rem;
       display: flex;
       button {
         border: none !important;
@@ -36,7 +36,7 @@ const Comment = ({
         align-items: center;
         padding-right: 1rem;
         > button {
-          margin: 0.7rem 0;
+          margin: 0.5rem 0;
         }
       `}
     >
@@ -44,6 +44,7 @@ const Comment = ({
         className={likedPosts.includes("c" + id)}
         onClick={() => togglePostLike("c" + id)}
         css={css`
+          margin-top: 0 !important;
           ${likedPosts.includes("c" + id) ? "border-color: #555" : ""}
         `}
       >
@@ -75,9 +76,7 @@ const Comment = ({
         >
           {author}
         </h3>
-        <ReactTooltip id="userPopup" aria-haspopup="true" role="example">
-          <em>Test</em>
-        </ReactTooltip>
+        <UserPopup />
         <div
           css={css`
             display: flex;
@@ -115,13 +114,15 @@ const Comment = ({
           ) : (
             ""
           )}
-          <span
+          <time
             css={css`
               font-size: 0.8rem;
+              color: #484848;
             `}
+            datetime={date}
           >
             {date}
-          </span>
+          </time>
         </div>
       </div>
       <p
@@ -135,7 +136,7 @@ const Comment = ({
       >
         {content}
       </p>
-      <div class="flex-container">
+      <div css={css``}>
         {email === store.UserEmail ? (
           <button>
             <img src={TrashIcon} width="12px" /> <strong>Delete</strong>

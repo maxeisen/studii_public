@@ -140,28 +140,43 @@ function Post({ store }) {
             </button>
           </div>
           <div>
-            <h2
+            <div
               css={css`
-                font-size: 16px;
-                padding-top: 8px;
+                display: flex;
+                justify-content: space-between;
               `}
             >
-              <b>{author}</b> to{" "}
-              <b
+              <h2
                 css={css`
-                  color: #00a7ff;
+                  font-size: 16px;
+                  padding-top: 8px;
                 `}
               >
-                {course}
-              </b>
-            </h2>
+                <b>{author}</b> to{" "}
+                <b
+                  css={css`
+                    color: #00a7ff;
+                  `}
+                >
+                  {course}
+                </b>
+              </h2>
+              <time
+                css={css`
+                  color: #484848;
+                `}
+                datetime={date}
+              >
+                {date}
+              </time>
+            </div>
             <h2
               css={css`
                 font-weight: 500;
                 padding-top: 10px;
               `}
             >
-              <b>{title}</b>
+              {title}
             </h2>
             <p
               css={css`
@@ -174,25 +189,29 @@ function Post({ store }) {
             >
               {content}
             </p>
-            <div class="flex-container">
-              <button>
-                <img
-                  src={ReplyIcon}
-                  width="20px"
-                  css={css`
-                    padding-top: 7%;
-                  `}
-                />{" "}
-                <strong>Reply</strong>
-              </button>
-            </div>
           </div>
         </div>
         <div
           css={css`
             border-left: 3px solid #222;
-            margin-left: 1rem;
-            padding-left: 1rem;
+            margin-left: 1.2rem;
+            padding-left: 1.2rem;
+            padding-bottom: 2rem;
+          `}
+        >
+          <button
+            css={css`
+              color: black;
+            `}
+          >
+            <img src={ReplyIcon} width="20px" /> <strong>Reply</strong>
+          </button>
+        </div>
+        <div
+          css={css`
+            border-left: 3px solid #222;
+            margin-left: 1.2rem;
+            padding-left: 1.2rem;
           `}
         >
           <div>
@@ -208,6 +227,7 @@ function Post({ store }) {
         <div
           css={css`
             margin-top: 2rem;
+            margin-left: 1.5rem;
           `}
         >
           <label
