@@ -4,6 +4,7 @@ import { css } from "@emotion/core";
 import ThumbUpIcon from "../assets/Icons/thumbsup.svg";
 import ThumbDownIcon from "../assets/Icons/thumbsdown.svg";
 import TrashIcon from "../assets/Icons/trash.svg";
+import ReactTooltip from "react-tooltip";
 
 const Comment = ({
   id,
@@ -65,6 +66,8 @@ const Comment = ({
         `}
       >
         <h3
+          data-tip
+          data-for="userPopup"
           css={css`
             padding: 0;
             margin: 0;
@@ -72,6 +75,9 @@ const Comment = ({
         >
           {author}
         </h3>
+        <ReactTooltip id="userPopup" aria-haspopup="true" role="example">
+          <em>Test</em>
+        </ReactTooltip>
         <div
           css={css`
             display: flex;
