@@ -1,0 +1,786 @@
+{
+	"info": {
+		"_postman_id": "6e86f479-6500-4522-af3e-223668e7460c",
+		"name": "Studii Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User Auth",
+			"item": [
+				{
+					"name": "Login (admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7a52f8e5-1d98-4fcf-a156-70bbc329651c",
+								"exec": [
+									"var token = pm.response.json()[\"token\"];",
+									"pm.collectionVariables.set(\"AdminToken\", token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "admin@admin.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/userauth/login/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"userauth",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login (not admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6af4f653-cb89-4e8d-8b66-18c66cce35b9",
+								"exec": [
+									"var token = pm.response.json()[\"token\"];",
+									"pm.collectionVariables.set(\"NotAdminToken\", token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "notadmin@admin.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "notadmin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/userauth/login/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"userauth",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (not admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"email\": \"notadmin@admin.com\",\r\n\t\"password\":\"notadmin\",\r\n\t\"first_name\":\"Not\",\r\n\t\"last_name\":\"Admin\",\r\n\t\"profile\":{}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/userauth/users/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"userauth",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout (not admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{NotAdminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/userauth/logout/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"userauth",
+								"logout",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout (admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{AdminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/userauth/logout/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"userauth",
+								"logout",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout All (not admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{NotAdminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/userauth/logoutall/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"userauth",
+								"logoutall",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout All (admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{AdminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/userauth/logoutall/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"userauth",
+								"logoutall",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "Courses",
+					"item": [
+						{
+							"name": "Course creation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b8c56fde-fbaf-4e0f-af58-90f9d0e24b32",
+										"exec": [
+											"var url = pm.response.json()[\"url\"];",
+											"pm.collectionVariables.set(\"CourseURL\", url);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Token {{NotAdminToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "courseCode",
+											"value": "TEST100",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "Test Course",
+											"type": "text"
+										},
+										{
+											"key": "university",
+											"value": "QU",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8000/posts/courses/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"posts",
+										"courses",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get course info (example course)",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Token {{NotAdminToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{CourseURL}}",
+									"host": [
+										"{{CourseURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Courses",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Token {{AdminToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8000/posts/courses/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"posts",
+										"courses",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Join course",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Token {{NotAdminToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "course",
+											"value": "{{CourseURL}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8000/posts/joincourse/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"posts",
+										"joincourse",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Leave course",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Token {{NotAdminToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "course",
+											"value": "{{CourseURL}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8000/posts/leavecourse/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"posts",
+										"leavecourse",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Create post (text content)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8d440992-55b3-4f92-89c9-0f2f9107549e",
+								"exec": [
+									"var url = pm.response.json()[\"url\"];",
+									"pm.collectionVariables.set(\"PostURL\", url);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{NotAdminToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Test Post 1\",\n\t\"course\": \"{{CourseURL}}\",\n\t\"content\": {\n\t\t\"textContent\": \"Testing 123\"\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/posts/content/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"posts",
+								"content",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Post info (text content)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{NotAdminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{PostURL}}",
+							"host": [
+								"{{PostURL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Post (text content)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{NotAdminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{PostURL}}",
+							"host": [
+								"{{PostURL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Comment (text content)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9fc8e804-8c98-46c6-9f00-17299d929e35",
+								"exec": [
+									"var url = pm.response.json()[\"url\"];",
+									"pm.collectionVariables.set(\"CommentURL\", url);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{NotAdminToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"parentPost\": \"{{PostURL}}\",\n\t\"content\": {\n\t\t\"textContent\": \"Testing 123\"\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/posts/comment/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"posts",
+								"comment",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment (text content)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{NotAdminToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CommentURL}}",
+							"host": [
+								"{{CommentURL}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Queen's API",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{NotAdminToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "course",
+							"value": "http://localhost:8000/posts/courses/3/",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "contentType",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "content",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "content",
+							"type": "file",
+							"src": "djangoLogo.jpg"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.qmulus.io/v1/buildings?token=acfd49e019e411eaa51cadf84af15a52",
+					"protocol": "https",
+					"host": [
+						"api",
+						"qmulus",
+						"io"
+					],
+					"path": [
+						"v1",
+						"buildings"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "acfd49e019e411eaa51cadf84af15a52"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "5a329973-a24c-4349-83b5-9313ce7f2fa6",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "5a6677a6-4d10-43c8-a6b9-a469fdf62fb1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "a2688e58-44a8-4626-a4df-dc2ec7c892ff",
+			"key": "AdminToken",
+			"value": "e985f5de59c3a2f2562479299988c51fe25b48401a6618c1a97718100f9f46f5",
+			"type": "string"
+		},
+		{
+			"id": "ef0b325d-1614-4d8f-901d-fecd2cc524dc",
+			"key": "NotAdminToken",
+			"value": "06b835d2101ac0a890a58f1f042c913588e41a78d3a4fdbe7c746797b901fc67",
+			"type": "string"
+		},
+		{
+			"id": "516d16d9-ab68-4bb9-a9bf-16d7b78812b0",
+			"key": "CourseURL",
+			"value": "http://localhost:8000/posts/courses/bf8217a0-278d-4672-8904-96032d50f928/",
+			"type": "string"
+		},
+		{
+			"id": "76e7de31-c5ee-4a9d-a139-5e91a9bb5afe",
+			"key": "PostURL",
+			"value": "http://localhost:8000/posts/content/c6aac26a-3113-4c04-9d06-12afd6222e49/",
+			"type": "string"
+		},
+		{
+			"id": "f5445697-b8f2-415f-a6e3-184c09117ff0",
+			"key": "CommentURL",
+			"value": "http://localhost:8000/posts/comment/9746b61f-cb13-40b5-b74b-743872b2f324/",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

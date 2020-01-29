@@ -2,12 +2,14 @@ from rest_framework.parsers import FileUploadParser, JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status, permissions, viewsets
-from .models import Course, Post
-from .serializers import ContentSerializer, CourseSerializer, PostSerializer
+from .models import Course, Post, Comment
+from .serializers import ContentSerializer, CourseSerializer, PostSerializer, JoinOrLeaveCourseSerializer, CommentSerializer
 from studii.permissions import IsLoggedInUserOrAdmin, IsAdminUser
 from django.shortcuts import get_object_or_404
+from django.urls import resolve
+from urllib.parse import urlparse
 
-# FIXME: Deleting post should delete content from S3 bucket (Does deleting post automaticly cascade to course post list?)
+# FIXME: Deleting post should delete content from S3 bucket (Does deleting post automatically cascade to course post list?)
 
 
 class ContentUploadView(APIView):
@@ -27,16 +29,7 @@ class PostView(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     parser_class = (FileUploadParser, JSONParser)
-
-    def get_permissions(self):
-        permission_classes = []
-        if self.action == 'retrieve':
-            permission_classes = [permissions.IsAuthenticated]
-        elif self.action == 'update' or self.action == 'partial_update' or self.action == 'create' or self.action == 'destroy':
-            permission_classes = [IsLoggedInUserOrAdmin]
-        elif self.action == 'list':
-            permission_classes = [IsAdminUser]
-        return [permission() for permission in permission_classes]
+    permission_classes = [permissions.AllowAny]
 
     def create(self, request):
         post_serializer = PostSerializer(
@@ -47,6 +40,7 @@ class PostView(viewsets.ModelViewSet):
         else:
             return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # TODO: Check if deletion cascades to user's posts and course's posts
     def destroy(self, request, pk=None):
         post = self.get_object()
         if post.author == request.user:
@@ -74,15 +68,105 @@ class PostView(viewsets.ModelViewSet):
 # TODO: Use IsLoggedInUserOrAdmin to simplify
 
 
+class CommentView(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    parser_class = (FileUploadParser, JSONParser)
+    permission_classes = [permissions.AllowAny]
+
+    def create(self, request):
+        comment_serializer = CommentSerializer(
+            data=request.data, context={'request': request})
+        if comment_serializer.is_valid():
+            comment_serializer.save(author=request.user)
+            return Response(comment_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # TODO: Check if deletion cascades to user's comments and course's comments
+    def destroy(self, request, pk=None):
+        comment = self.get_object()
+        if comment.author == request.user:
+            try:
+                self.perform_destroy(comment)
+            except Http404:
+                pass
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    def update(self, request, pk=None):
+        comment = self.get_object()
+        if comment.author == request.user:
+            comment_serializer = CommentSerializer(
+                comment, data=request.data, context={'request': request})
+            if comment_serializer.is_valid():
+                comment_serializer.save()
+                return Response(comment_serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class JoinCourseView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def put(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = JoinOrLeaveCourseSerializer(
+            data=request.data, context={'request': request})
+        if serializer.is_valid():
+            url = serializer.data.get("course")
+            parsedUrl = urlparse(url).path
+            course = resolve(parsedUrl).func.cls.serializer_class.Meta.model.objects.get(
+                **resolve(parsedUrl).kwargs)
+            course.members.add(self.object)
+            course.save()
+            self.object.courses.add(course)
+            self.object.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LeaveCourseView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def put(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = JoinOrLeaveCourseSerializer(
+            data=request.data, context={'request': request})
+        if serializer.is_valid():
+            url = serializer.data.get("course")
+            parsedUrl = urlparse(url).path
+            course = resolve(parsedUrl).func.cls.serializer_class.Meta.model.objects.get(
+                **resolve(parsedUrl).kwargs)
+            course.members.remove(self.object)
+            course.save()
+            self.object.courses.remove(course)
+            self.object.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class CourseView(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    permission_classes = (IsLoggedInUserOrAdmin,)
 
     def get_permissions(self):
         permission_classes = []
-        if self.action == 'retrieve' or self.action == 'create':
+        if self.action == 'retrieve':
             permission_classes = [permissions.IsAuthenticated]
-        elif self.action == 'update' or self.action == 'partial_update' or self.action == 'destroy':
+        elif self.action == 'update' or self.action == 'partial_update' or self.action == 'create' or self.action == 'destroy':
             permission_classes = [IsLoggedInUserOrAdmin]
         elif self.action == 'list':
             permission_classes = [IsAdminUser]

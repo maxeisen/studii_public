@@ -1,5 +1,7 @@
 from django.core.exceptions import ValidationError
 
+# NOTE: Depreciated
+
 
 def validate_content(value):
     i = 0
