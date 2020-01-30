@@ -10,6 +10,51 @@ import TrashIcon from "../assets/Icons/trash.svg";
 import ReplyIcon from "../assets/Icons/reply.svg";
 
 function Post({ store }) {
+  const [commentValue, setCommentValue] = useState("");
+
+  const [comments, setComments] = useState([
+    {
+      id: 1,
+      author: "Student135",
+      email: "Student135@queensu.ca",
+      verified: false,
+      date: "November 5, 2019",
+      score: 16,
+      content: "Google it",
+      bestComment: true
+    },
+    {
+      id: 2,
+      author: "Tutor12",
+      email: "Tutor12@queensu.ca",
+      verified: true,
+      date: "November 6, 2019",
+      score: 12,
+      content:
+        "It's basically a typically text-based interface that is used to run commands at the level of the operating system. Any application that you run on your computer is actually being run through the command line beneath the surface. Often used for development, as well."
+    },
+    {
+      id: 3,
+      author: "Hill_Ross",
+      email: "ross.hill@queensu.ca",
+      verified: false,
+      date: "November 6, 2019",
+      score: -5,
+      content: "boooo western bad queens good",
+      bestComment: false
+    },
+    {
+      id: 4,
+      author: "Student404",
+      email: "Student404@queensu.ca",
+      verified: false,
+      date: "November 5, 2019",
+      score: 0,
+      content: "I was wondering the same thing honestly...",
+      bestComment: false
+    }
+  ]);
+
   const [likedPosts, setLikedPosts] = useState([]);
 
   const togglePostLike = postID => {
@@ -30,52 +75,8 @@ function Post({ store }) {
       "Hi guys, I'm reading over some notes from this week's lectures and I have no clue what a command-line interface is. Can anyone offer some help?",
     date: "November 4, 2019",
     numComments: 4,
-    score: 15,
-    comments: [
-      {
-        id: 1,
-        author: "Student135",
-        email: "Student135@queensu.ca",
-        verified: false,
-        date: "November 5, 2019",
-        score: 16,
-        content: "Google it",
-        bestComment: true
-      },
-      {
-        id: 2,
-        author: "Tutor12",
-        email: "Tutor12@queensu.ca",
-        verified: true,
-        date: "November 6, 2019",
-        score: 12,
-        content:
-          "It's basically a typically text-based interface that is used to run commands at the level of the operating system. Any application that you run on your computer is actually being run through the command line beneath the surface. Often used for development, as well."
-      },
-      {
-        id: 3,
-        author: "Hill_Ross",
-        email: "ross.hill@queensu.ca",
-        verified: false,
-        date: "November 6, 2019",
-        score: -5,
-        content: "boooo western bad queens good",
-        bestComment: false
-      },
-      {
-        id: 4,
-        author: "Student404",
-        email: "Student404@queensu.ca",
-        verified: false,
-        date: "November 5, 2019",
-        score: 0,
-        content: "I was wondering the same thing honestly...",
-        bestComment: false
-      }
-    ]
+    score: 15
   };
-
-  const numResponses = postData.comments.length;
 
   const {
     postID,
@@ -85,8 +86,7 @@ function Post({ store }) {
     content,
     date,
     numComments,
-    score,
-    comments
+    score
   } = postData;
 
   return (
@@ -215,7 +215,7 @@ function Post({ store }) {
           `}
         >
           <div>
-            {postData.comments.map(comment => (
+            {comments.map(comment => (
               <Comment
                 {...comment}
                 togglePostLike={togglePostLike}
@@ -247,6 +247,8 @@ function Post({ store }) {
             `}
             id="comment"
             name="comment"
+            value={commentValue}
+            onChange={e => setCommentValue(e.target.value)}
           />
           <br />
           <button
@@ -254,7 +256,21 @@ function Post({ store }) {
               color: white;
               background-color: #00a7ff;
             `}
-            onClick={() => alert("API call then refresh")}
+            onClick={() =>
+              setComments([
+                ...comments,
+                {
+                  id: 5,
+                  author: "MEisen",
+                  email: "max.eisen@queensu.ca",
+                  verified: true,
+                  date: "January 30, 2020",
+                  score: 0,
+                  content: commentValue,
+                  bestComment: false
+                }
+              ])
+            }
           >
             Reply
           </button>
