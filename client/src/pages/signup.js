@@ -12,17 +12,15 @@ function Signup({ store }) {
 
   const history = useHistory();
 
-  const requestSignup = () => {
+  const requestStudentSignup = () => {
     const data = {
       email,
       username: email,
       password,
-      first_name: "Example",
-      last_name: "Test",
+      first_name: "test",
+      last_name: "test",
       profile: {
-        university: "Queen's",
-        program: "Testing",
-        gradYear: 2020
+
       }
     };
     fetch("http://localhost:8000/userauth/users/", {
@@ -40,7 +38,39 @@ function Signup({ store }) {
         if (r.status >= 200 && r.status < 300) {
           setMessage("You're signed up! Redirecting...");
           setTimeout(() => {
-            history.push("/login");
+            history.push("/studentProfile");
+          }, 3000);
+        } else {
+          throw new Error("Signup failed");
+        }
+      })
+      .catch(r => {
+        setMessage("Could not create account");
+      });
+  };
+
+  const requestTutorSignup = () => {
+    const data = {
+      email,
+      username: email,
+      password
+    };
+    fetch("http://localhost:8000/userauth/users/", {
+      method: "POST",
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+      .then(r => r.json())
+      .then(r => {
+        if (r.status >= 200 && r.status < 300) {
+          setMessage("You're signed up! Redirecting...");
+          setTimeout(() => {
+            history.push("/tutorProfile");
           }, 3000);
         } else {
           throw new Error("Signup failed");
@@ -100,7 +130,21 @@ function Signup({ store }) {
                 type="password"
               />
             </div>
-            <button onClick={requestSignup}>Signup</button>
+            <div
+              css={css`
+                padding-top: 10px,
+                margin-left: auto,
+                margin-right: auto,
+                display: center
+              `}>
+              <label>
+                I am a...
+              </label>
+            </div>
+            <div id="outer">
+              <button class="inner" onClick={requestStudentSignup}>Student</button>
+              <button class="inner" onClick={requestTutorSignup}>Tutor</button>
+            </div>
           </div>
         )}
       </div>
