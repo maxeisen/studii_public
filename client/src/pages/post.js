@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { observer, inject } from "mobx-react";
 import { Link } from "react-router-dom";
 import ContentWrapper from "../components/contentWrapper";
+import Comment from "../components/comment";
 import { css } from "@emotion/core";
 import ThumbUpIcon from "../assets/Icons/thumbsup.svg";
 import ThumbDownIcon from "../assets/Icons/thumbsdown.svg";
 import TrashIcon from "../assets/Icons/trash.svg";
-import CommentIcon from "../assets/Icons/comment.svg";
+import ReplyIcon from "../assets/Icons/reply.svg";
 
 function Post({ store }) {
   const [likedPosts, setLikedPosts] = useState([]);
@@ -89,43 +90,66 @@ function Post({ store }) {
   } = postData;
 
   return (
-    <section id="forum">
-      <ContentWrapper>
-        <Link to="/forum">
-          <h1
+    <ContentWrapper>
+      <h1>Discussion Post</h1>
+      <Link to="/forum">Back to Forum</Link>
+      <section
+        id="forum"
+        css={css`
+          padding: 1rem;
+          border: 1px solid #555;
+          border-radius: 5px;
+          margin: 1.5rem 0;
+          button {
+            border: none !important;
+          }
+        `}
+      >
+        <div
+          key={title}
+          css={css`
+            display: flex;
+            align-items: center;
+          `}
+        >
+          <div
             css={css`
-              font-weight: 500;
-              color: #00a7ff;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              padding-right: 1rem;
+              > button {
+                margin: 0.7rem 0;
+              }
             `}
           >
-            <b>Back to Forum</b>
-          </h1>
-        </Link>
-        <div>
-          <div>
-            <div
-              key={title}
+            <button
+              className={likedPosts.includes("p" + postID)}
+              onClick={() => togglePostLike("p" + postID)}
               css={css`
-                padding: 20px 20px 0px 20px;
-                border: 2px solid black;
-                border-radius: 5px;
-                margin: 20px 20px 20px 20px;
+                ${likedPosts.includes("p" + postID) ? "border-color: #555" : ""}
               `}
             >
-              <span
-                align="right"
-                css={css`
-                  font-size: 10px;
-                  color: #484848;
-                  line-height: 20px;
-                `}
-              >
-                {date}
-              </span>
+              <img src={ThumbUpIcon} width="20px" />
+            </button>
+            <strong>
+              {likedPosts.includes("p" + postID) ? score + 1 : score}
+            </strong>
+            <button>
+              <img src={ThumbDownIcon} width="20px" />
+            </button>
+          </div>
+          <div>
+            <div
+              css={css`
+                display: flex;
+                justify-content: space-between;
+              `}
+            >
               <h2
                 css={css`
-                  font-size: 20px;
-                  padding-top: 15px;
+                  font-size: 16px;
+                  padding-top: 8px;
                 `}
               >
                 <b>{author}</b> to{" "}
@@ -137,58 +161,73 @@ function Post({ store }) {
                   {course}
                 </b>
               </h2>
-              <h2
+              <time
                 css={css`
-                  font-weight: 500;
-                  padding-top: 10px;
+                  color: #484848;
                 `}
+                datetime={date}
               >
-                <b>{title}</b>
-              </h2>
-              <p
-                css={css`
-                  font-size: 14px;
-                  color: #000000;
-                  line-height: 20px;
-                  padding-top: 15px;
-                  padding-bottom: 15px;
-                `}
-              >
-                {content}
-              </p>
-              <div class="flex-container">
-                <button
-                  className={likedPosts.includes("p" + postID)}
-                  onClick={() => togglePostLike("p" + postID)}
-                  css={css`
-                    ${likedPosts.includes("p" + postID)
-                      ? "border-color: #555"
-                      : ""}
-                  `}
-                >
-                  <img src={ThumbUpIcon} width="20px" />{" "}
-                  <strong>
-                    {likedPosts.includes("p" + postID) ? score + 1 : score}
-                  </strong>
-                </button>
-
-                <button>
-                  <img
-                    src={CommentIcon}
-                    width="20px"
-                    css={css`
-                      padding-top: 7%;
-                    `}
-                  />{" "}
-                  <strong>{numComments}</strong>
-                </button>
-              </div>
+                {date}
+              </time>
             </div>
+            <h2
+              css={css`
+                font-weight: 500;
+                padding-top: 10px;
+              `}
+            >
+              {title}
+            </h2>
+            <p
+              css={css`
+                font-size: 14px;
+                color: #000000;
+                line-height: 20px;
+                padding-top: 15px;
+                padding-bottom: 15px;
+              `}
+            >
+              {content}
+            </p>
           </div>
         </div>
         <div
           css={css`
-            padding: 1.5rem;
+            border-left: 3px solid #222;
+            margin-left: 1.2rem;
+            padding-left: 1.2rem;
+            padding-bottom: 2rem;
+          `}
+        >
+          <button
+            css={css`
+              color: black;
+            `}
+          >
+            <img src={ReplyIcon} width="20px" /> <strong>Reply</strong>
+          </button>
+        </div>
+        <div
+          css={css`
+            border-left: 3px solid #222;
+            margin-left: 1.2rem;
+            padding-left: 1.2rem;
+          `}
+        >
+          <div>
+            {postData.comments.map(comment => (
+              <Comment
+                {...comment}
+                togglePostLike={togglePostLike}
+                likedPosts={likedPosts}
+              />
+            ))}
+          </div>
+        </div>
+        <div
+          css={css`
+            margin-top: 2rem;
+            margin-left: 1.5rem;
           `}
         >
           <label
@@ -197,7 +236,7 @@ function Post({ store }) {
             `}
             htmlFor="comment"
           >
-            Comment
+            Reply to {postData.author}
           </label>
           <br />
           <textarea
@@ -212,162 +251,16 @@ function Post({ store }) {
           <br />
           <button
             css={css`
-              color: #333;
+              color: white;
+              background-color: #00a7ff;
             `}
             onClick={() => alert("API call then refresh")}
           >
-            Submit
+            Reply
           </button>
         </div>
-        <div>
-          <h1
-            css={css`
-              padding-top: 35px;
-            `}
-          >
-            {numResponses} Responses
-          </h1>
-          <div>
-            {postData.comments.map(
-              ({
-                id,
-                author,
-                verified,
-                date,
-                score,
-                content,
-                bestComment,
-                email
-              }) => (
-                <div
-                  key={title}
-                  css={css`
-                    width: 80%;
-                    padding: 20px 20px 0px 20px;
-                    border: 2px solid lightgray;
-                    border-radius: 5px;
-                    margin: 20px auto 20px auto;
-                    ${verified ? "border-color: #8ed8ff;" : ""}
-                    ${bestComment ? "border-color: lightgreen;" : ""}
-                  `}
-                >
-                  <div
-                    css={css`
-                      display: flex;
-                      justify-content: space-between;
-                    `}
-                  >
-                    <span
-                      align="right"
-                      css={css`
-                        font-size: 10px;
-                        color: #484848;
-                        line-height: 20px;
-                      `}
-                    >
-                      {date}
-                    </span>
-                    {verified ? (
-                      <span
-                        align="right"
-                        css={css`
-                          direction: rtl;
-                          text-align: right;
-                          font-size: 15px;
-                          color: #00a7ff;
-                          line-height: 20px;
-                        `}
-                      >
-                        Verified User
-                      </span>
-                    ) : (
-                      ""
-                    )}
-                    {bestComment ? (
-                      <span
-                        align="right"
-                        css={css`
-                          direction: rtl;
-                          text-align: right;
-                          font-size: 15px;
-                          color: green;
-                          line-height: 20px;
-                        `}
-                      >
-                        Best Reponse
-                      </span>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                  <h1
-                    css={css`
-                      padding-top: 10px;
-                    `}
-                  >
-                    <b>{author}</b> to <b>{postData.author}</b>
-                  </h1>
-                  <p
-                    css={css`
-                      font-size: 14px;
-                      color: #000000;
-                      line-height: 20px;
-                      padding-top: 15px;
-                      padding-bottom: 15px;
-                    `}
-                  >
-                    {content}
-                  </p>
-                  <div class="flex-container">
-                    <button
-                      className={
-                        likedPosts.includes("c" + id) ? "commentLiked" : ""
-                      }
-                      onClick={() => togglePostLike("c" + id)}
-                      css={css`
-                        ${likedPosts.includes("c" + id)
-                          ? "border-color: #555;"
-                          : ""}
-                      `}
-                    >
-                      <img src={ThumbUpIcon} width="20px" />{" "}
-                      <strong>
-                        {likedPosts.includes("c" + id) ? score + 1 : score}
-                      </strong>
-                    </button>
-
-                    <button>
-                      <img
-                        src={ThumbDownIcon}
-                        width="20px"
-                        css={css`
-                          padding-top: 7%;
-                        `}
-                      />{" "}
-                    </button>
-
-                    {email === store.UserEmail ? (
-                      <button>
-                        <img
-                          src={TrashIcon}
-                          width="15px"
-                          css={css`
-                            padding-top: 7%;
-                          `}
-                        />{" "}
-                        <strong>Delete</strong>
-                      </button>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                </div>
-              )
-            )}
-          </div>
-        </div>
-      </ContentWrapper>
-    </section>
+      </section>
+    </ContentWrapper>
   );
 }
 
