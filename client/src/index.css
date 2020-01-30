@@ -4,7 +4,8 @@ button {
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 3px;
-  padding: 0.2rem;
+  padding: 0.7rem;
+  margin: 1rem 0;
 }
 
 button,
@@ -129,10 +130,9 @@ code {
   background: rgba(0, 0, 0, 0.3);
 }
 
-#outer
-{
-    width:100%;
-    text-align: center;
+#outer {
+  width: 100%;
+  text-align: center;
 }
 
 .inner
