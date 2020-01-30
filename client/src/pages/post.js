@@ -25,8 +25,8 @@ function Post({ store }) {
     },
     {
       id: 2,
-      author: "Tutor12",
-      email: "Tutor12@queensu.ca",
+      author: "MayWhite",
+      email: "may.white@queensu.ca",
       verified: true,
       date: "November 6, 2019",
       score: 12,
