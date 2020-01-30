@@ -5,7 +5,11 @@ import { css } from "@emotion/core";
 import ContentWrapper from "../components/contentWrapper";
 
 function TutorProfileBuilder({ store }) {
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [school, setSchool] = useState("");
   const [affiliation, setAffiliation] = useState("");
   const [subjects, setSubjects] = useState("");
@@ -16,11 +20,20 @@ function TutorProfileBuilder({ store }) {
 
   const submitProfile = () => {
     const data = {
-      profile: {
-        name: name,
-        school: school,
-        affiliation: affiliation,
-        subjects: subjects
+        accountType: "tutor",
+        email,
+        username: email,
+        password,
+        courses: [],
+        posts: [],
+        first_name: firstName,
+        last_name: lastName,
+        profile: {
+          university: school,
+          affiliation: affiliation,
+          // studentNumber: studentNumber
+          // program: program,
+          // gradYear: gradYear,
       }
     };
     fetch("http://localhost:8000/userauth/users/", {
@@ -35,16 +48,19 @@ function TutorProfileBuilder({ store }) {
     })
       .then(r => r.json())
       .then(r => {
-        if (r.status >= 200 && r.status < 300) {
-          setMessage("Your profile has been created! Redirecting...");
-          setTimeout(() => {
-            history.push("/login");
-          }, 3000);
-        } else {
-          throw new Error("Profile build failed");
-        }
+        // console.log(r);
+        history.push("/login");
+        // if (r.status >= 200 && r.status < 300) {
+        //   setMessage("Your profile has been created! Redirecting...");
+        //   setTimeout(() => {
+        //     history.push("/login");
+        //   }, 3000);
+        // } else {
+        //   throw new Error("Profile build failed");
+        // }
       })
       .catch(r => {
+        // console.log(r);
         setMessage("Could not create profile");
       });
   };
@@ -57,7 +73,7 @@ function TutorProfileBuilder({ store }) {
           margin: 0 auto;
         `}
       >
-        <h2>Tutor Profile</h2>
+        <h2>Create a Tutor Account</h2>
         {message ? (
           message
         ) : (
@@ -73,12 +89,57 @@ function TutorProfileBuilder({ store }) {
                 margin-bottom: 1rem;
               `}
             >
-              <label>Name</label>
+              <label>Email</label>
               <br />
               <input
-                value={name}
+                value={email}
                 onChange={e => {
-                  setName(e.target.value);
+                  setEmail(e.target.value);
+                }}
+                type="text"
+              />
+            </div>
+            <div
+              css={css`
+                margin-bottom: 1rem;
+              `}
+            >
+              <label>Password</label>
+              <br />
+              <input
+                value={password}
+                onChange={e => {
+                  setPassword(e.target.value);
+                }}
+                type="password"
+              />
+            </div>
+            <div
+              css={css`
+                margin-bottom: 1rem;
+              `}
+            >
+              <label>First Name</label>
+              <br />
+              <input
+                value={firstName}
+                onChange={e => {
+                  setFirstName(e.target.value);
+                }}
+                type="text"
+              />
+            </div>
+            <div
+              css={css`
+                margin-bottom: 1rem;
+              `}
+            >
+              <label>Last Name</label>
+              <br />
+              <input
+                value={lastName}
+                onChange={e => {
+                  setLastName(e.target.value);
                 }}
                 type="text"
               />
@@ -113,7 +174,7 @@ function TutorProfileBuilder({ store }) {
                 type="text"
               />
             </div>
-            <button onClick={submitProfile}>Submit</button>
+            <button css={css`background-color: #5FC8FF; color: #ffffff`} onClick={submitProfile}>Submit</button>
           </div>
         )}
       </div>

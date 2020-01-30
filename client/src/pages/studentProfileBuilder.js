@@ -3,9 +3,14 @@ import { observer, inject } from "mobx-react";
 import { useHistory, Link } from "react-router-dom";
 import { css } from "@emotion/core";
 import ContentWrapper from "../components/contentWrapper";
+import sampleAvi from "../assets/people.png";
 
 function StudentProfileBuilder({ store }) {
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [school, setSchool] = useState("");
   const [courses, setCourses] = useState("");
   const [program, setProgram] = useState("");
@@ -18,15 +23,24 @@ function StudentProfileBuilder({ store }) {
 
   const submitProfile = () => {
     const data = {
+      accountType: "student",
+      email,
+      username: email,
+      password,
+      courses: [],
+      posts: [],
+      first_name: firstName,
+      last_name: lastName,
       profile: {
-        name: name,
-        school: school,
-        courses: courses,
+        // name: name,
+        university: school,
+        courses: [],
         program: program,
         gradYear: gradYear,
         studentNumber: studentNumber
       }
     };
+
     fetch("http://localhost:8000/userauth/users/", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
@@ -39,16 +53,19 @@ function StudentProfileBuilder({ store }) {
     })
       .then(r => r.json())
       .then(r => {
-        if (r.status >= 200 && r.status < 300) {
-          setMessage("Your profile has been created! Redirecting...");
-          setTimeout(() => {
-            history.push("/login");
-          }, 3000);
-        } else {
-          throw new Error("Profile build failed");
-        }
+        // console.log(r);
+        history.push("/login");
+        // if (r.status >= 200 && r.status < 300) {
+        //   setMessage("Your profile has been created! Redirecting...");
+        //   setTimeout(() => {
+        //     history.push("/login");
+        //   }, 3000);
+        // } else {
+        //   throw new Error("Profile build failed");
+        // }
       })
       .catch(r => {
+        // console.log(r);
         setMessage("Could not create profile");
       });
   };
@@ -61,7 +78,7 @@ function StudentProfileBuilder({ store }) {
           margin: 0 auto;
         `}
       >
-        <h2>Student Profile</h2>
+        <h2>Create a Student Account</h2>
         {message ? (
           message
         ) : (
@@ -77,16 +94,63 @@ function StudentProfileBuilder({ store }) {
                 margin-bottom: 1rem;
               `}
             >
-              <label>Name</label>
+              <label>Email</label>
               <br />
               <input
-                value={name}
+                value={email}
                 onChange={e => {
-                  setName(e.target.value);
+                  setEmail(e.target.value);
                 }}
                 type="text"
               />
             </div>
+            <div
+              css={css`
+                margin-bottom: 1rem;
+              `}
+            >
+              <label>Password</label>
+              <br />
+              <input
+                value={password}
+                onChange={e => {
+                  setPassword(e.target.value);
+                }}
+                type="password"
+              />
+            </div>
+            <span>
+            <div
+              css={css`
+                margin-bottom: 1rem;
+              `}
+            >
+              <label>First Name</label>
+              <br />
+              <input
+                value={firstName}
+                onChange={e => {
+                  setFirstName(e.target.value);
+                }}
+                type="text"
+              />
+            </div>
+            <div
+              css={css`
+                margin-bottom: 1rem;
+              `}
+            >
+              <label>Last Name</label>
+              <br />
+              <input
+                value={lastName}
+                onChange={e => {
+                  setLastName(e.target.value);
+                }}
+                type="text"
+              />
+            </div>
+            </span>
             <div
               css={css`
                 margin-bottom: 1rem;
@@ -147,7 +211,7 @@ function StudentProfileBuilder({ store }) {
                 type="number"
               />
             </div>
-            <button onClick={submitProfile}>Submit</button>
+            <button css={css`background-color: #5FC8FF; color: #ffffff`} onClick={submitProfile}>Submit</button>
           </div>
         )}
       </div>

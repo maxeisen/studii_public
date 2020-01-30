@@ -138,4 +138,12 @@ code {
 .inner
 {
     display: inline-block;
+    background-color: #5FC8FF;
+    color: #ffffff;
+    border: none;
+    padding: 35px 35px 35px 35px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
 }
