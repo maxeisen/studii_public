@@ -17,7 +17,9 @@
     "react-router-dom": "^5.1.2",
     "react-router-scroll-top": "^0.2.1",
     "react-scripts": "3.2.0",
+    "react-select": "^3.0.8",
     "react-sidebar": "^3.0.2",
+    "react-tooltip": "^3.11.2",
     "yarn": "^1.19.1"
   },
   "scripts": {

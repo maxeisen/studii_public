@@ -2,6 +2,7 @@ import React from "react";
 import ContentWrapper from "../components/contentWrapper";
 import { css } from "@emotion/core";
 import { Link } from "react-router-dom";
+import Logo from "../assets/Logo.png";
 
 function Home() {
   return (
@@ -51,7 +52,7 @@ function Home() {
             transform: translateY(-50%);
           `}
         >
-          <img src={require("../assets/Logo.svg")} />
+          <img css={css`width: 190px`} src={Logo} />
           <div
             css={css`
               height: 1rem;
