@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Content, Course, Post, Comment
-from posts.posts_validators import validate_content as post_validator
 from django.core import exceptions
 
 
@@ -21,15 +20,22 @@ class JoinOrLeaveCourseSerializer(serializers.Serializer):
         required=True, view_name='course-detail', queryset=Course.objects.all())
 
 
+class VoteSerializer(serializers.Serializer):
+
+    id = serializers.UUIDField(format='hex_verbose')
+    opperation = serializers.ChoiceField(
+        choices=('like', 'dislike', 'neutral'))
+
+
 class PostSerializer(serializers.HyperlinkedModelSerializer):
     content = ContentSerializer(required=True)
 
     class Meta:
         model = Post
         fields = ('url', 'id', 'dateTimePosted', 'dateTimeEdited', 'title',
-                  'author', 'course', 'content', 'comments', 'likesCount', 'likes')
+                  'author', 'course', 'content', 'comments', 'points', 'likers', 'dislikers')
         read_only_fields = ('url', 'id', 'dateTimePosted',
-                            'dateTImeEdited', 'comments', 'likesCount', 'likes')
+                            'dateTImeEdited', 'comments', 'points', 'likers', 'dislikers')
 
     """ def validate(self, value):
         try:
@@ -69,9 +75,9 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Comment
         fields = ('url', 'id', 'author', 'dateTimePosted', 'dateTimeEdited', 'parentPost',
-                  'content', 'likesCount', 'likes')
+                  'content', 'points', 'likers', 'dislikers')
         read_only_fields = ('url', 'id', 'dateTimePosted',
-                            'dateTImeEdited', 'likesCount', 'likes')
+                            'dateTImeEdited', 'points', 'likers', 'dislikers')
 
     def create(self, validated_data):
         content_data = validated_data.pop('content')
