@@ -1,3 +1,7 @@
+package-lock.json
+package.json
+client/package-lock,json
+
 # virtual env
 py37-venv/
 node_modules/
@@ -166,5 +170,5 @@ backend/TESTING/CreatePostTest.http
 backend/TESTING/testImg.jpg
 backend/studii/TODO_LIST.txt
 backend/TESTING/TODO_LIST.txt
-package-lock.json
+
 

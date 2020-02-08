@@ -23,7 +23,7 @@ class User(AbstractUser):
         to='posts.Post', on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
     comments = models.ArrayReferenceField(
         to='posts.Comment', on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
-    isTutor = models.BooleanField(default=False, editable=False)
+    isTutor = models.BooleanField(default=False)
 
     # Overwriting default username field in Django's AbstractUser class. Allows for unique check for email and prevents usernames from being required.
     USERNAME_FIELD = 'email'
