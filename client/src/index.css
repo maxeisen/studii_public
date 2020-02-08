@@ -1,5 +1,6 @@
 input[type="text"],
 input[type="password"],
+input[type="number"],
 button {
   background-color: white;
   border: 1px solid #ccc;
@@ -135,15 +136,14 @@ code {
   text-align: center;
 }
 
-.inner
-{
-    display: inline-block;
-    background-color: #5FC8FF;
-    color: #ffffff;
-    border: none;
-    padding: 35px 35px 35px 35px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
+.inner {
+  display: inline-block;
+  background-color: #5fc8ff;
+  color: #ffffff;
+  border: none;
+  padding: 35px 35px 35px 35px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
 }
