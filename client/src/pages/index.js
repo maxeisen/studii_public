@@ -51,7 +51,7 @@ function Home() {
             transform: translateY(-50%);
           `}
         >
-          <img src={require("../assets/Logo.svg")} />
+          <img src={require("../assets/Logo_small.png")} />
           <div
             css={css`
               height: 1rem;
