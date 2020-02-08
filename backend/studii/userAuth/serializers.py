@@ -1,13 +1,17 @@
 from rest_framework import serializers
+from posts.serializers import JoinOrLeaveCourseSerializer
 from .models import User, UserProfile
 from django.core import exceptions
 import django.contrib.auth.password_validation as validators
+from django.urls import resolve
+from urllib.parse import urlparse
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ('avatar', 'university', 'program', 'gradYear')
+        fields = ('avatar', 'university', 'program',
+                  'gradYear', 'affiliation', 'bio')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -16,10 +20,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('url', 'id', 'email', 'first_name',
-                  'last_name', 'password', 'clout', 'courses', 'posts', 'comments', 'profile')
-        read_only_fields = ('url', 'id', 'clout',
-                            'courses', 'posts', 'comments')
-        extra_kwargs = {'password': {'write_only': True}}
+                  'last_name', 'password', 'clout', 'courses', 'posts', 'comments', 'profile', 'isTutor')
+        read_only_fields = ('url', 'id', 'clout', 'comments')
+        extra_kwargs = {'password': {'write_only': True},
+                        'courses': {'many': True}}
+        courses = JoinOrLeaveCourseSerializer(many=True)
 
     def validate_password(self, value):
         try:
@@ -29,12 +34,18 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         return value
 
     def create(self, validated_data):
+        courses = validated_data.pop('courses')
         profile_data = validated_data.pop('profile')
         password = validated_data.pop('password')
         user = User(**validated_data)
         user.set_password(password)
         user.save()
         UserProfile.objects.create(user=user, **profile_data)
+        for course in courses:
+            user.courses.add(course)
+            user.save()
+            course.members.add(user)
+
         return user
 
     def update(self, instance, validated_data):
