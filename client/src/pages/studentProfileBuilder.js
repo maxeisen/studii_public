@@ -16,7 +16,7 @@ function StudentProfileBuilder({ store }) {
   const [gradYear, setGradYear] = useState("");
 
   const [courseOptions, setCourseOptions] = useState([]);
-
+  const [selectedCourses, setSelectedCourses] = useState([]);
   useEffect(() => {
     if (courseOptions.length === 0) {
       const getData = async () => {
@@ -33,8 +33,6 @@ function StudentProfileBuilder({ store }) {
       getData();
     }
   }, [courseOptions]);
-
-  const [selectedCourses, setSelectedCourses] = useState([]);
 
   const [message, setMessage] = useState("");
 
@@ -212,7 +210,6 @@ function StudentProfileBuilder({ store }) {
                 onChange={setSelectedCourses}
                 options={courseOptions}
               />
-              <div>{JSON.stringify(selectedCourses)}</div>
             </div>
             <div
               css={css`
