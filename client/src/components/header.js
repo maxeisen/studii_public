@@ -4,7 +4,7 @@ import { css } from "@emotion/core";
 import { Link, useHistory } from "react-router-dom";
 
 import { MdPerson } from "react-icons/md";
-import Logo from "../assets/Logo.svg";
+import Logo from "../assets/Logo.png";
 import { observer, inject } from "mobx-react";
 
 function Header({ store }) {
