@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { observer, inject } from "mobx-react";
 import { useHistory, Link } from "react-router-dom";
 import { css } from "@emotion/core";
 import ContentWrapper from "../components/contentWrapper";
-import sampleAvi from "../assets/people.png";
+import Select from "react-select";
 
 function StudentProfileBuilder({ store }) {
   const [email, setEmail] = useState("");
@@ -11,11 +11,28 @@ function StudentProfileBuilder({ store }) {
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [school, setSchool] = useState("");
-  const [courses, setCourses] = useState("");
+  const [school, setSchool] = useState("Queen's University");
   const [program, setProgram] = useState("");
   const [gradYear, setGradYear] = useState("");
-  const [studentNumber, setStudentNumber] = useState("");
+
+  const [courseOptions, setCourseOptions] = useState([]);
+  const [selectedCourses, setSelectedCourses] = useState([]);
+  useEffect(() => {
+    if (courseOptions.length === 0) {
+      const getData = async () => {
+        const data = await fetch(
+          "http://localhost:8000/posts/courses/"
+        ).then(r => r.json());
+        setCourseOptions(
+          data.map(x => ({
+            label: `${x.courseCode} - ${x.name}`,
+            value: x.url
+          }))
+        );
+      };
+      getData();
+    }
+  }, [courseOptions]);
 
   const [message, setMessage] = useState("");
 
@@ -27,17 +44,16 @@ function StudentProfileBuilder({ store }) {
       email,
       username: email,
       password,
-      courses: [],
+      // courses: [],
       posts: [],
       first_name: firstName,
       last_name: lastName,
       profile: {
         // name: name,
         university: school,
-        courses: [],
+        courses: selectedCourses.map(x => x.value),
         program: program,
-        gradYear: gradYear,
-        studentNumber: studentNumber
+        gradYear: gradYear
       }
     };
 
@@ -120,36 +136,36 @@ function StudentProfileBuilder({ store }) {
               />
             </div>
             <span>
-            <div
-              css={css`
-                margin-bottom: 1rem;
-              `}
-            >
-              <label>First Name</label>
-              <br />
-              <input
-                value={firstName}
-                onChange={e => {
-                  setFirstName(e.target.value);
-                }}
-                type="text"
-              />
-            </div>
-            <div
-              css={css`
-                margin-bottom: 1rem;
-              `}
-            >
-              <label>Last Name</label>
-              <br />
-              <input
-                value={lastName}
-                onChange={e => {
-                  setLastName(e.target.value);
-                }}
-                type="text"
-              />
-            </div>
+              <div
+                css={css`
+                  margin-bottom: 1rem;
+                `}
+              >
+                <label>First Name</label>
+                <br />
+                <input
+                  value={firstName}
+                  onChange={e => {
+                    setFirstName(e.target.value);
+                  }}
+                  type="text"
+                />
+              </div>
+              <div
+                css={css`
+                  margin-bottom: 1rem;
+                `}
+              >
+                <label>Last Name</label>
+                <br />
+                <input
+                  value={lastName}
+                  onChange={e => {
+                    setLastName(e.target.value);
+                  }}
+                  type="text"
+                />
+              </div>
             </span>
             <div
               css={css`
@@ -168,7 +184,7 @@ function StudentProfileBuilder({ store }) {
             </div>
             <div
               css={css`
-                margin-bottom: 1rem;
+                margin-bottom: 0.8rem;
               `}
             >
               <label>Program</label>
@@ -186,6 +202,20 @@ function StudentProfileBuilder({ store }) {
                 margin-bottom: 1rem;
               `}
             >
+              <label>Courses</label>
+              <br />
+              <Select
+                value={selectedCourses}
+                isMulti
+                onChange={setSelectedCourses}
+                options={courseOptions}
+              />
+            </div>
+            <div
+              css={css`
+                margin-bottom: 1rem;
+              `}
+            >
               <label>Expected Graduation Year</label>
               <br />
               <input
@@ -196,22 +226,15 @@ function StudentProfileBuilder({ store }) {
                 type="number"
               />
             </div>
-            <div
+            <button
               css={css`
-                margin-bottom: 1rem;
+                background-color: #5fc8ff;
+                color: #ffffff;
               `}
+              onClick={submitProfile}
             >
-              <label>Student Number</label>
-              <br />
-              <input
-                value={studentNumber}
-                onChange={e => {
-                  setStudentNumber(e.target.value);
-                }}
-                type="number"
-              />
-            </div>
-            <button css={css`background-color: #5FC8FF; color: #ffffff`} onClick={submitProfile}>Submit</button>
+              Submit
+            </button>
           </div>
         )}
       </div>

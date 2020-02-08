@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { observer, inject } from "mobx-react";
 import { useHistory, Link } from "react-router-dom";
 import { css } from "@emotion/core";
 import ContentWrapper from "../components/contentWrapper";
+import Select from "react-select";
 
 function TutorProfileBuilder({ store }) {
   const [email, setEmail] = useState("");
@@ -18,22 +19,41 @@ function TutorProfileBuilder({ store }) {
 
   const history = useHistory();
 
+  const [courseOptions, setCourseOptions] = useState([]);
+  const [selectedCourses, setSelectedCourses] = useState([]);
+  useEffect(() => {
+    if (courseOptions.length === 0) {
+      const getData = async () => {
+        const data = await fetch(
+          "http://localhost:8000/posts/courses/"
+        ).then(r => r.json());
+        setCourseOptions(
+          data.map(x => ({
+            label: `${x.courseCode} - ${x.name}`,
+            value: x.url
+          }))
+        );
+      };
+      getData();
+    }
+  }, [courseOptions]);
+
   const submitProfile = () => {
     const data = {
-        accountType: "tutor",
-        email,
-        username: email,
-        password,
-        courses: [],
-        posts: [],
-        first_name: firstName,
-        last_name: lastName,
-        profile: {
-          university: school,
-          affiliation: affiliation,
-          // studentNumber: studentNumber
-          // program: program,
-          // gradYear: gradYear,
+      accountType: "tutor",
+      email,
+      username: email,
+      password,
+      posts: [],
+      first_name: firstName,
+      last_name: lastName,
+      profile: {
+        university: school,
+        affiliation: affiliation,
+        courses: selectedCourses.map(x => x.value)
+        // studentNumber: studentNumber
+        // program: program,
+        // gradYear: gradYear,
       }
     };
     fetch("http://localhost:8000/userauth/users/", {
@@ -164,6 +184,20 @@ function TutorProfileBuilder({ store }) {
                 margin-bottom: 1rem;
               `}
             >
+              <label>Courses</label>
+              <br />
+              <Select
+                value={selectedCourses}
+                isMulti
+                onChange={setSelectedCourses}
+                options={courseOptions}
+              />
+            </div>
+            <div
+              css={css`
+                margin-bottom: 1rem;
+              `}
+            >
               <label>Affiliated Tutoring Service (optional)</label>
               <br />
               <input
@@ -174,7 +208,15 @@ function TutorProfileBuilder({ store }) {
                 type="text"
               />
             </div>
-            <button css={css`background-color: #5FC8FF; color: #ffffff`} onClick={submitProfile}>Submit</button>
+            <button
+              css={css`
+                background-color: #5fc8ff;
+                color: #ffffff;
+              `}
+              onClick={submitProfile}
+            >
+              Submit
+            </button>
           </div>
         )}
       </div>
