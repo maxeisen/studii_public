@@ -17,8 +17,11 @@ function StudentProfileBuilder({ store }) {
 
   const [courseOptions, setCourseOptions] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
+
+  const [areCoursesFetched, setAreCoursesFetched] = useState(false);
+
   useEffect(() => {
-    if (courseOptions.length === 0) {
+    if (!areCoursesFetched) {
       const getData = async () => {
         const data = await fetch(
           "http://localhost:8000/posts/courses/"
@@ -29,10 +32,11 @@ function StudentProfileBuilder({ store }) {
             value: x.url
           }))
         );
+        setAreCoursesFetched(true);
       };
       getData();
     }
-  }, [courseOptions]);
+  }, [areCoursesFetched]);
 
   const [message, setMessage] = useState("");
 
