@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status, permissions, viewsets
 from .models import Course, Post, Comment
-from .serializers import ContentSerializer, CourseSerializer, PostSerializer, JoinOrLeaveCourseSerializer, CommentSerializer
+from .serializers import ContentSerializer, CourseSerializer, PostSerializer, JoinOrLeaveCourseSerializer, CommentSerializer, VoteSerializer
 from studii.permissions import IsLoggedInUserOrAdmin, IsAdminUser
 from django.shortcuts import get_object_or_404
 from django.urls import resolve
@@ -109,6 +109,74 @@ class CommentView(viewsets.ModelViewSet):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
+class VoteView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def put(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = VoteSerializer(
+            data=request.data, context={'request': request})
+        if serializer.is_valid():
+            op = serializer.data.get('opperation')
+            id = serializer.data.get('id')
+            try:
+                content = Comment.objects.get(id=id)
+            except Comment.DoesNotExist:
+                try:
+                    content = Post.objects.get(id=id)
+                except Post.DoesNotExist:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            return getattr(self, op)(content, self.object)
+
+    def like(self, content, user):
+        if not content.likers.filter(id=user.id).exists() and not content.dislikers.filter(id=user.id).exists():
+            content.likers.add(user)
+            content.points = content.points + 1
+            content.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        elif not content.likers.filter(id=user.id).exists() and content.dislikers.filter(id=user.id).exists():
+            content.likers.add(user)
+            content.dislikers.remove(user)
+            content.points = content.points + 2
+            content.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def dislike(self, content, user):
+        if not content.likers.filter(id=user.id).exists() and not content.dislikers.filter(id=user.id).exists():
+            content.dislikers.add(user)
+            content.points = content.points - 1
+            content.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        elif content.likers.filter(id=user.id).exists() and not content.dislikers.filter(id=user.id).exists():
+            content.dislikers.add(user)
+            content.likers.remove(user)
+            content.points = content.points - 2
+            content.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def neutral(self, content, user):
+        if content.likers.filter(id=user.id).exists():
+            content.likers.remove(user)
+            content.points = content.points - 1
+            content.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        if content.dislikers.filter(id=user.id).exists():
+            content.dislikers.remove(user)
+            content.points = content.points + 1
+            content.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+
 class JoinCourseView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -169,7 +237,7 @@ class CourseView(viewsets.ModelViewSet):
         elif self.action == 'update' or self.action == 'partial_update' or self.action == 'create' or self.action == 'destroy':
             permission_classes = [IsLoggedInUserOrAdmin]
         elif self.action == 'list':
-            permission_classes = [IsAdminUser]
+            permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
 
     def create(self, request):

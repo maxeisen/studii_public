@@ -1,4 +1,4 @@
-from posts.views import ContentUploadView, CourseView, PostView, ListPostsView, JoinCourseView, LeaveCourseView, CommentView
+from posts.views import ContentUploadView, CourseView, PostView, ListPostsView, JoinCourseView, LeaveCourseView, CommentView, VoteView
 from django.conf.urls import url
 from django.urls import include, path
 from rest_framework import routers
@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^show/(?P<pk>\d+)/$', ListPostsView.as_view(), name='Posts'),
     url(r'joincourse/', JoinCourseView.as_view(), name='join_course'),
     url(r'leavecourse/', LeaveCourseView.as_view(), name='leave_course'),
+    url(r'vote/', VoteView.as_view(), name='vote'),
 ]

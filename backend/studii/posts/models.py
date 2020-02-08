@@ -33,8 +33,10 @@ class Post(models.Model):
         Content, on_delete=models.CASCADE, related_name='post')
     comments = models.ArrayReferenceField(
         to='Comment', on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
-    likesCount = models.IntegerField(default=0)
-    likes = models.ArrayReferenceField(
+    points = models.IntegerField(default=0)
+    likers = models.ArrayReferenceField(
+        to='userAuth.User', on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
+    dislikers = models.ArrayReferenceField(
         to='userAuth.User', on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
 
     def __str__(self):
@@ -82,8 +84,10 @@ class Comment(models.Model):
         'Post', null=True, on_delete=models.CASCADE, related_name='comment')
     content = models.OneToOneField(
         Content, on_delete=models.CASCADE, related_name='comment')
-    likesCount = models.IntegerField(default=0)
-    likes = models.ArrayReferenceField(
+    points = models.IntegerField(default=0)
+    likers = models.ArrayReferenceField(
+        to='userAuth.User', on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
+    dislikers = models.ArrayReferenceField(
         to='userAuth.User', on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
 
     def __str__(self):
