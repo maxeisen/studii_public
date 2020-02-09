@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status, permissions, viewsets
 from .models import Course, Post, Comment
+from userAuth.models import User
 from .serializers import ContentSerializer, CourseSerializer, PostSerializer, JoinOrLeaveCourseSerializer, CommentSerializer, VoteSerializer
 from studii.permissions import IsLoggedInUserOrAdmin, IsAdminUser
 from django.shortcuts import get_object_or_404
@@ -293,9 +294,21 @@ class ListPostsView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request, pk, format=None):
-        lookup = {'pk': pk}
+        lookup = {'id': pk}
         course = get_object_or_404(Course, **lookup)
         posts = course.posts
         serializer = PostSerializer(
             posts, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+class EnrolledCoursesView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, pk, format=None):
+        lookup = {'pk': pk}
+        user = get_object_or_404(User, **lookup)
+        courses = user.courses
+        serializer = CourseSerializer(
+            courses, many=True, context={'request': request})
         return Response(serializer.data)
