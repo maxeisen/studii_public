@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Content, Course, Post, Comment
+from userAuth.models import User
 from django.core import exceptions
 
 
@@ -36,13 +37,6 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
                   'author', 'course', 'content', 'comments', 'points', 'likers', 'dislikers')
         read_only_fields = ('url', 'id', 'dateTimePosted',
                             'dateTImeEdited', 'comments', 'points', 'likers', 'dislikers')
-
-    """ def validate(self, value):
-        try:
-            post_validator(value)
-        except exceptions.ValidationError as exc:
-            raise exceptions.ValidationError(str(exc))
-        return value """
 
     def create(self, validated_data):
         content_data = validated_data.pop('content')
