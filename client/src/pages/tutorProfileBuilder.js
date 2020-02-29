@@ -42,6 +42,36 @@ function TutorProfileBuilder({ store }) {
     }
   }, [areCoursesFetched]);
 
+  const requestLogin = () => {
+    const data = { username: email, password };
+    fetch("http://localhost:8000/userauth/login/", {
+      method: "POST",
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+      .then(r => r.json())
+      .then(r => {
+        if (r.token) {
+          setMessage("You're logged in! Redirecting...");
+          store.SetToken(r.token);
+          store.SetIsStudent(!r.user.isTutor);
+          store.SetUserId(r.user.id);
+          store.SetEmail(email);
+          history.push("/forum");
+        } else {
+          throw new Error("No token received");
+        }
+      })
+      .catch(r => {
+        setMessage("Wrong username or password");
+      });
+  };
+
   const submitProfile = () => {
     const data = {
       isTutor: true,
@@ -72,7 +102,7 @@ function TutorProfileBuilder({ store }) {
       .then(r => r.json())
       .then(r => {
         // console.log(r);
-        history.push("/login");
+        requestLogin();
         // if (r.status >= 200 && r.status < 300) {
         //   setMessage("Your profile has been created! Redirecting...");
         //   setTimeout(() => {
@@ -84,7 +114,7 @@ function TutorProfileBuilder({ store }) {
       })
       .catch(r => {
         // console.log(r);
-        setMessage("Could not create profile");
+        setMessage("Logging you in...");
       });
   };
 
