@@ -336,11 +336,13 @@ class ListPostsView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request, pk, format=None):
+        paginator = pagination_class = LimitOffsetPagination()
         lookup = {'id': pk}
         course = get_object_or_404(Course, **lookup)
         posts = course.posts
+        postFeed = paginator.paginate_queryset(posts, request)
         serializer = PostSerializer(
-            posts, many=True, context={'request': request})
+            postFeed, many=True, context={'request': request})
         return Response(serializer.data)
 
 
@@ -355,15 +357,16 @@ class EnrolledCoursesView(APIView):
             courses, many=True, context={'request': request})
         return Response(serializer.data)
 
+
 class GetUserFeedView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    
+
     def get(self, request, format=None):
         paginator = pagination_class = LimitOffsetPagination()
         enrolledCourses = request.user.courses.all()
         posts = Post.objects.filter(
             course__in=enrolledCourses).order_by('-dateTimePosted')
-        postFeed = paginator.paginate_queryset(posts, request)    
+        postFeed = paginator.paginate_queryset(posts, request)
         serializer = PostSerializer(
             postFeed, many=True, context={'request': request})
         return Response(serializer.data)
