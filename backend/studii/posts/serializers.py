@@ -2,6 +2,9 @@ from rest_framework import serializers
 from .models import Content, Course, Post, Comment
 from userAuth.models import User
 from django.core import exceptions
+from django.urls import resolve
+from urllib.parse import urlparse
+from django.http import Http404
 
 
 class ContentSerializer(serializers.ModelSerializer):
@@ -13,7 +16,9 @@ class ContentSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Course
-        fields = ("__all__")
+        fields = ('id', 'url', 'courseCode', 'name', 'university',
+                  'description', 'creator', 'posts', 'members')
+        read_only_fields = ('url', 'id', 'posts', 'members')
 
 
 class JoinOrLeaveCourseSerializer(serializers.Serializer):
@@ -36,7 +41,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'id', 'dateTimePosted', 'dateTimeEdited', 'title',
                   'author', 'course', 'content', 'comments', 'points', 'likers', 'dislikers')
         read_only_fields = ('url', 'id', 'dateTimePosted',
-                            'dateTImeEdited', 'comments', 'points', 'likers', 'dislikers')
+                            'dateTimeEdited', 'comments', 'points', 'likers', 'dislikers')
 
     def create(self, validated_data):
         content_data = validated_data.pop('content')
@@ -72,6 +77,16 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
                   'content', 'points', 'likers', 'dislikers')
         read_only_fields = ('url', 'id', 'dateTimePosted',
                             'dateTImeEdited', 'points', 'likers', 'dislikers')
+
+    def validate(self, data):
+        postURL = data['parentPost']
+        parsedUrl = urlparse(url).path
+        try:
+            course = resolve(parsedUrl).func.cls.serializer_class.Meta.model.objects.get(
+                **resolve(parsedUrl).kwargs)
+        except Http404:
+            raise serializers.ValidationError("Invalid parent post URL")
+        return data
 
     def create(self, validated_data):
         content_data = validated_data.pop('content')
