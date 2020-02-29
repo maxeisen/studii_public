@@ -1,6 +1,7 @@
 from rest_framework.parsers import FileUploadParser, JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import status, permissions, viewsets
 from .models import Course, Post, Comment
 from userAuth.models import User
@@ -357,11 +358,13 @@ class EnrolledCoursesView(APIView):
 
 class GetUserFeedView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-
+    
     def get(self, request, format=None):
+        paginator = pagination_class = LimitOffsetPagination()
         enrolledCourses = request.user.courses.all()
-        postFeed = Post.objects.filter(
+        posts = Post.objects.filter(
             course__in=enrolledCourses).order_by('-dateTimePosted')
+        postFeed = paginator.paginate_queryset(posts, request)    
         serializer = PostSerializer(
             postFeed, many=True, context={'request': request})
         return Response(serializer.data)
