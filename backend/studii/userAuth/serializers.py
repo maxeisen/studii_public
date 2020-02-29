@@ -5,8 +5,6 @@ from django.core import exceptions
 import django.contrib.auth.password_validation as validators
 from django.urls import resolve
 from urllib.parse import urlparse
-from django.contrib.auth import login
-from django.shortcuts import redirect
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -36,8 +34,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         return value
 
     def create(self, validated_data):
-        loginData = {key: validated_data[key] for key in validated_data.keys() & {
-            'email', 'password'}}
         courses = validated_data.pop('courses')
         profile_data = validated_data.pop('profile')
         password = validated_data.pop('password')
@@ -49,8 +45,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             user.courses.add(course)
             user.save()
             course.members.add(user)
-        return redirect('knox_login')
-        # return user
+        return user
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop('profile')
