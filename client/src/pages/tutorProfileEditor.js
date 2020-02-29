@@ -19,61 +19,87 @@ function TutorProfileEditor({ store }) {
 
   const history = useHistory();
 
-  const [courseOptions, setCourseOptions] = useState([]);
-  const [selectedCourses, setSelectedCourses] = useState([]);
+  // const [courseOptions, setCourseOptions] = useState([]);
+  // const [selectedCourses, setSelectedCourses] = useState([]);
 
-  const [areCoursesFetched, setAreCoursesFetched] = useState(false);
+  // const [areCoursesFetched, setAreCoursesFetched] = useState(false);
+  const [isProfileFetched, setIsProfileFetched] = useState(false);
+
 
   useEffect(() => {
-    if (!areCoursesFetched) {
+    if (!isProfileFetched && store.UserId) {
       const getData = async () => {
-        const data = await fetch(
-          "http://localhost:8000/posts/courses/"
+  
+        const tempProfile = await fetch(
+          `http://localhost:8000/userauth/users/${store.UserId}/`,
+          {
+            mode: 'cors', // no-cors, *cors, same-origin
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Token ${store.UserToken}`
+            },
+          }
         ).then(r => r.json());
-        setCourseOptions(
-          data.map(x => ({
-            label: `${x.courseCode} - ${x.name}`,
-            value: x.url
-          }))
-        );
-        setAreCoursesFetched(true);
-      };
-      getData();
-    }
-  }, [areCoursesFetched]);
+  
+        setIsProfileFetched(true);
+  
+        setFirstName(tempProfile.first_name)
+        setLastName(tempProfile.last_name)
+        setSchool(tempProfile.profile.university)
+        setAffiliation(tempProfile.profile.affiliation)
+        }
+        getData();
+      }
+    },
+    [store.UserId, isProfileFetched]
+    )
+
+  // useEffect(() => {
+  //   if (!areCoursesFetched) {
+  //     const getData = async () => {
+  //       const data = await fetch(
+  //         "http://localhost:8000/posts/courses/"
+  //       ).then(r => r.json());
+  //       setCourseOptions(
+  //         data.map(x => ({
+  //           label: `${x.courseCode} - ${x.name}`,
+  //           value: x.url
+  //         }))
+  //       );
+  //       setAreCoursesFetched(true);
+  //     };
+  //     getData();
+  //   }
+  // }, [areCoursesFetched]);
 
   const submitProfile = () => {
     const data = {
-      accountType: "tutor",
-      email,
-      username: email,
-      password,
-      posts: [],
       first_name: firstName,
       last_name: lastName,
       profile: {
         university: school,
         affiliation: affiliation,
-        courses: selectedCourses.map(x => x.value)
+        // courses: selectedCourses.map(x => x.value)
         // studentNumber: studentNumber
         // program: program,
         // gradYear: gradYear,
       }
     };
-    fetch("http://localhost:8000/userauth/users/", {
-      method: "POST",
+    fetch(`http://localhost:8000/userauth/users/${store.UserId}/`, {
+      method: "PATCH",
       mode: "cors", // no-cors, *cors, same-origin
       cache: "no-cache",
       credentials: "same-origin",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        'Authorization': `Token ${store.UserToken}`
       },
       body: JSON.stringify(data)
     })
       .then(r => r.json())
       .then(r => {
         // console.log(r);
-        history.push("/login");
+        history.push("/forum");
         // if (r.status >= 200 && r.status < 300) {
         //   setMessage("Your profile has been created! Redirecting...");
         //   setTimeout(() => {
@@ -108,36 +134,6 @@ function TutorProfileEditor({ store }) {
               border: 1px solid #ccc;
             `}
           >
-            <div
-              css={css`
-                margin-bottom: 1rem;
-              `}
-            >
-              <label>Email</label>
-              <br />
-              <input
-                value={email}
-                onChange={e => {
-                  setEmail(e.target.value);
-                }}
-                type="text"
-              />
-            </div>
-            <div
-              css={css`
-                margin-bottom: 1rem;
-              `}
-            >
-              <label>Password</label>
-              <br />
-              <input
-                value={password}
-                onChange={e => {
-                  setPassword(e.target.value);
-                }}
-                type="password"
-              />
-            </div>
             <div
               css={css`
                 margin-bottom: 1rem;
@@ -181,20 +177,6 @@ function TutorProfileEditor({ store }) {
                   setSchool(e.target.value);
                 }}
                 type="text"
-              />
-            </div>
-            <div
-              css={css`
-                margin-bottom: 1rem;
-              `}
-            >
-              <label>Courses</label>
-              <br />
-              <Select
-                value={selectedCourses}
-                isMulti
-                onChange={setSelectedCourses}
-                options={courseOptions}
               />
             </div>
             <div

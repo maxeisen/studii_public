@@ -31,7 +31,7 @@ function TutorProfileBuilder({ store }) {
           "http://localhost:8000/posts/courses/"
         ).then(r => r.json());
         setCourseOptions(
-          data.results.map(x => ({
+          data.map(x => ({
             label: `${x.courseCode} - ${x.name}`,
             value: x.url
           }))
@@ -44,17 +44,16 @@ function TutorProfileBuilder({ store }) {
 
   const submitProfile = () => {
     const data = {
-      accountType: "tutor",
+      isTutor: true,
       email,
       username: email,
       password,
-      posts: [],
       first_name: firstName,
       last_name: lastName,
+      courses: selectedCourses.map(x => x.value),
       profile: {
         university: school,
         affiliation: affiliation,
-        courses: selectedCourses.map(x => x.value)
         // studentNumber: studentNumber
         // program: program,
         // gradYear: gradYear,

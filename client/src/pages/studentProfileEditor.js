@@ -15,11 +15,11 @@ function StudentProfileEditor({ store }) {
   const [program, setProgram] = useState("");
   const [gradYear, setGradYear] = useState("");
 
-  const [courseOptions, setCourseOptions] = useState([]);
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
-  const [selectedCourses, setSelectedCourses] = useState([]);
+  // const [courseOptions, setCourseOptions] = useState([]);
+  // const [enrolledCourses, setEnrolledCourses] = useState([]);
+  // const [selectedCourses, setSelectedCourses] = useState([]);
   
-  const [areCoursesFetched, setAreCoursesFetched] = useState(false);
+  // const [areCoursesFetched, setAreCoursesFetched] = useState(false);
   const [isProfileFetched, setIsProfileFetched] = useState(false);
 
 
@@ -51,43 +51,43 @@ function StudentProfileEditor({ store }) {
   [store.UserId, isProfileFetched]
   )
 
-  useEffect(() => {
-    if (!areCoursesFetched) {
-      const getData = async () => {
+  // useEffect(() => {
+  //   if (!areCoursesFetched) {
+  //     const getData = async () => {
 
-        const availableCourses = await fetch(
-          "http://localhost:8000/posts/courses/"
-        ).then(r => r.json());
+  //       const availableCourses = await fetch(
+  //         "http://localhost:8000/posts/courses/"
+  //       ).then(r => r.json());
 
-        const chosenCourses = await fetch(
-          `http://localhost:8000/posts/enrolled/${store.UserId}/`,
-          {
-            mode: 'cors', // no-cors, *cors, same-origin
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Token ${store.UserToken}`
-            },
-          }
-        ).then(r => r.json());
+  //       const chosenCourses = await fetch(
+  //         `http://localhost:8000/posts/enrolled/${store.UserId}/`,
+  //         {
+  //           mode: 'cors', // no-cors, *cors, same-origin
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //             'Authorization': `Token ${store.UserToken}`
+  //           },
+  //         }
+  //       ).then(r => r.json());
 
-        setEnrolledCourses(
-          chosenCourses.map(x => ({
-            label: x.courseCode + " - " + x.name,
-            value: x.url
-          }))
-        );
+  //       setEnrolledCourses(
+  //         chosenCourses.map(x => ({
+  //           label: x.courseCode + " - " + x.name,
+  //           value: x.url
+  //         }))
+  //       );
         
-        setCourseOptions(
-          availableCourses.results.map(x => ({
-            label: x.courseCode + " - " + x.name,
-            value: x.url
-          }))
-        );
-        setAreCoursesFetched(true);
-      };
-      getData();
-    }
-  }, [areCoursesFetched]);
+  //       setCourseOptions(
+  //         availableCourses.map(x => ({
+  //           label: x.courseCode + " - " + x.name,
+  //           value: x.url
+  //         }))
+  //       );
+  //       setAreCoursesFetched(true);
+  //     };
+  //     getData();
+  //   }
+  // }, [areCoursesFetched]);
 
   const [message, setMessage] = useState("");
 
@@ -96,7 +96,7 @@ function StudentProfileEditor({ store }) {
   const submitProfile = () => {
     const data = {
       accountType: "student",
-      courses: enrolledCourses.map(x => x.value),
+      // courses: enrolledCourses.map(x => x.value),
       first_name: firstName,
       last_name: lastName,
       profile: {
@@ -121,11 +121,11 @@ function StudentProfileEditor({ store }) {
       .then(r => r.json())
       .then(r => {
         console.log(r);
-        history.push("/login");
+        history.push("/forum");
         if (r.status >= 200 && r.status < 300) {
           setMessage("Your profile has been edited! Redirecting...");
           setTimeout(() => {
-            history.push("/login");
+            history.push("/forum");
           }, 3000);
         } else {
           throw new Error("Profile build failed");
@@ -218,7 +218,7 @@ function StudentProfileEditor({ store }) {
                 type="text"
               />
             </div>
-            <div
+            {/* <div
               css={css`
                 margin-bottom: 1rem;
               `}
@@ -231,7 +231,7 @@ function StudentProfileEditor({ store }) {
                 onChange={setEnrolledCourses}
                 options={courseOptions}
               />
-            </div>
+            </div> */}
             <div
               css={css`
                 margin-bottom: 1rem;

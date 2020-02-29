@@ -27,7 +27,7 @@ function StudentProfileBuilder({ store }) {
           "http://localhost:8000/posts/courses/"
         ).then(r => r.json());
         setCourseOptions(
-          data.results.map(x => ({
+          data.map(x => ({
             label: `${x.courseCode} - ${x.name}`,
             value: x.url
           }))
@@ -44,7 +44,7 @@ function StudentProfileBuilder({ store }) {
 
   const submitProfile = () => {
     const data = {
-      accountType: "student",
+      isTutor: false,
       email,
       username: email,
       password,
