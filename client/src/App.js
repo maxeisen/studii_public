@@ -12,7 +12,9 @@ import WrapWithMobx from "./components/wrapWithMobx";
 import ScrollToTop from "./components/ScrollToTop";
 import Header from "./components/header";
 import StudentProfileBuilder from "./pages/studentProfileBuilder";
+import StudentProfileEditor from "./pages/studentProfileEditor";
 import TutorProfileBuilder from "./pages/tutorProfileBuilder";
+import TutorProfileEditor from "./pages/tutorProfileEditor";
 
 
 export default function BasicExample() {
@@ -45,10 +47,20 @@ export default function BasicExample() {
               <Header />
               <StudentProfileBuilder />
             </Route>
+            <Route path="/studentProfileEditor">
+              <Sidebar />
+              <Header />
+              <StudentProfileEditor />
+            </Route>
             <Route path="/tutorProfile">
               <Sidebar />
               <Header />
               <TutorProfileBuilder />
+            </Route>
+            <Route path="/tutorProfileEditor">
+              <Sidebar />
+              <Header />
+              <TutorProfileEditor />
             </Route>
             <Route path="/forum">
               <Sidebar />

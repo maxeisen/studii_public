@@ -5,7 +5,7 @@ import { css } from "@emotion/core";
 import ContentWrapper from "../components/contentWrapper";
 import Select from "react-select";
 
-function StudentProfileBuilder({ store }) {
+function StudentProfileEditor({ store }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -16,19 +16,70 @@ function StudentProfileBuilder({ store }) {
   const [gradYear, setGradYear] = useState("");
 
   const [courseOptions, setCourseOptions] = useState([]);
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
-
+  
   const [areCoursesFetched, setAreCoursesFetched] = useState(false);
+  const [isProfileFetched, setIsProfileFetched] = useState(false);
+
+
+  useEffect(() => {
+  if (!isProfileFetched && store.UserId) {
+    const getData = async () => {
+
+      const tempProfile = await fetch(
+        `http://localhost:8000/userauth/users/${store.UserId}/`,
+        {
+          mode: 'cors', // no-cors, *cors, same-origin
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${store.UserToken}`
+          },
+        }
+      ).then(r => r.json());
+
+      setIsProfileFetched(true);
+
+      setFirstName(tempProfile.first_name)
+      setLastName(tempProfile.last_name)
+      setProgram(tempProfile.profile.program)
+      setGradYear(tempProfile.profile.gradYear)
+      }
+      getData();
+    }
+  },
+  [store.UserId, isProfileFetched]
+  )
 
   useEffect(() => {
     if (!areCoursesFetched) {
       const getData = async () => {
-        const data = await fetch(
+
+        const availableCourses = await fetch(
           "http://localhost:8000/posts/courses/"
         ).then(r => r.json());
+
+        const chosenCourses = await fetch(
+          `http://localhost:8000/posts/enrolled/${store.UserId}/`,
+          {
+            mode: 'cors', // no-cors, *cors, same-origin
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Token ${store.UserToken}`
+            },
+          }
+        ).then(r => r.json());
+
+        setEnrolledCourses(
+          chosenCourses.map(x => ({
+            label: x.courseCode + " - " + x.name,
+            value: x.url
+          }))
+        );
+        
         setCourseOptions(
-          data.results.map(x => ({
-            label: `${x.courseCode} - ${x.name}`,
+          availableCourses.results.map(x => ({
+            label: x.courseCode + " - " + x.name,
             value: x.url
           }))
         );
@@ -45,10 +96,7 @@ function StudentProfileBuilder({ store }) {
   const submitProfile = () => {
     const data = {
       accountType: "student",
-      email,
-      username: email,
-      password,
-      courses: selectedCourses.map(x => x.value),
+      courses: enrolledCourses.map(x => x.value),
       first_name: firstName,
       last_name: lastName,
       profile: {
@@ -59,13 +107,14 @@ function StudentProfileBuilder({ store }) {
       }
     };
 
-    fetch("http://localhost:8000/userauth/users/", {
-      method: "POST",
+    fetch(`http://localhost:8000/userauth/users/${ store.UserId}/`, {
+      method: "PATCH",
       mode: "cors", // no-cors, *cors, same-origin
       cache: "no-cache",
       credentials: "same-origin",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        'Authorization': `Token ${store.UserToken}`
       },
       body: JSON.stringify(data)
     })
@@ -74,7 +123,7 @@ function StudentProfileBuilder({ store }) {
         console.log(r);
         history.push("/login");
         if (r.status >= 200 && r.status < 300) {
-          setMessage("Your profile has been created! Redirecting...");
+          setMessage("Your profile has been edited! Redirecting...");
           setTimeout(() => {
             history.push("/login");
           }, 3000);
@@ -84,7 +133,7 @@ function StudentProfileBuilder({ store }) {
       })
       .catch(r => {
         console.log(r);
-        setMessage("Could not create profile");
+        setMessage("Could not edit profile");
       });
   };
 
@@ -96,7 +145,7 @@ function StudentProfileBuilder({ store }) {
           margin: 0 auto;
         `}
       >
-        <h2>Create a Student Account</h2>
+        <h2>Your Student Profile</h2>
         {message ? (
           message
         ) : (
@@ -107,36 +156,6 @@ function StudentProfileBuilder({ store }) {
               border: 1px solid #ccc;
             `}
           >
-            <div
-              css={css`
-                margin-bottom: 1rem;
-              `}
-            >
-              <label>Email</label>
-              <br />
-              <input
-                value={email}
-                onChange={e => {
-                  setEmail(e.target.value);
-                }}
-                type="text"
-              />
-            </div>
-            <div
-              css={css`
-                margin-bottom: 1rem;
-              `}
-            >
-              <label>Password</label>
-              <br />
-              <input
-                value={password}
-                onChange={e => {
-                  setPassword(e.target.value);
-                }}
-                type="password"
-              />
-            </div>
             <span>
               <div
                 css={css`
@@ -207,12 +226,11 @@ function StudentProfileBuilder({ store }) {
               <label>Courses</label>
               <br />
               <Select
-                value={selectedCourses}
+                value={enrolledCourses}
                 isMulti
-                onChange={setSelectedCourses}
+                onChange={setEnrolledCourses}
                 options={courseOptions}
               />
-              {JSON.stringify(selectedCourses)}
             </div>
             <div
               css={css`
@@ -245,4 +263,4 @@ function StudentProfileBuilder({ store }) {
   );
 }
 
-export default inject(`store`)(observer(StudentProfileBuilder));
+export default inject(`store`)(observer(StudentProfileEditor));

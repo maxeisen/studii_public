@@ -63,11 +63,16 @@ function Header({ store }) {
             <span
               css={css`
                 font-size: 2rem;
+                color: white;
               `}
             >
-              <MdPerson />
+              <a href={ store.UserIsStudent ? "/studentProfileEditor" : "/tutorProfileEditor" } css={css`color: white`}>
+              <MdPerson css={css`margin-top: 7px`}/>
+              </a>
             </span>
+            <a href={ store.UserIsStudent ? "/studentProfileEditor" : "/tutorProfileEditor" } css={css`color: white`}>
             <span>{store.UserEmail}</span>
+            </a>
             <span>
               <button onClick={logout}>Log out</button>
             </span>
