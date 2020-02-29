@@ -13,13 +13,13 @@ import ScrollToTop from "./components/ScrollToTop";
 import Header from "./components/header";
 import StudentProfileBuilder from "./pages/studentProfileBuilder";
 import TutorProfileBuilder from "./pages/tutorProfileBuilder";
-
+import Tutors from "./pages/tutors";
 
 export default function BasicExample() {
   return (
     <WrapWithMobx>
       <Router>
-        <ScrollToTop/>
+        <ScrollToTop />
         <div>
           <Switch>
             <Route exact path="/">
@@ -49,6 +49,11 @@ export default function BasicExample() {
               <Sidebar />
               <Header />
               <TutorProfileBuilder />
+            </Route>
+            <Route path="/tutors">
+              <Sidebar />
+              <Header />
+              <Tutors />
             </Route>
             <Route path="/forum">
               <Sidebar />
