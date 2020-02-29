@@ -355,7 +355,6 @@ class EnrolledCoursesView(APIView):
             courses, many=True, context={'request': request})
         return Response(serializer.data)
 
-
 class GetUserFeedView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     

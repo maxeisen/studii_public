@@ -33,8 +33,42 @@ class VoteSerializer(serializers.Serializer):
         choices=('like', 'dislike', 'neutral'))
 
 
+class CommentSerializer(serializers.HyperlinkedModelSerializer):
+    content = ContentSerializer(required=True)
+
+    class Meta:
+        model = Comment
+        fields = ('url', 'id', 'author', 'dateTimePosted', 'dateTimeEdited', 'parentPost',
+                  'content', 'points', 'likers', 'dislikers')
+        read_only_fields = ('url', 'id', 'dateTimePosted',
+                            'dateTimeEdited', 'points', 'likers', 'dislikers')
+
+    def create(self, validated_data):
+        content_data = validated_data.pop('content')
+        contentInstance = Content.objects.create(**content_data)
+        comment = Comment(content=contentInstance, **validated_data)
+        comment.save()
+        parentPost = comment.parentPost
+        parentPost.comments.add(comment)
+        author = comment.author
+        author.comments.add(comment)
+        return comment
+
+    def update(self, instance, validated_data):
+        content_data = validated_data.pop('content')
+        content = instance.content
+        content.attachment = content_data.get(
+            'attachment', content.attachment)
+        content.textContent = content_data.get(
+            'textContent', content.textContent)
+        content.save()
+        instance.save()
+        return instance
+
+
 class PostSerializer(serializers.HyperlinkedModelSerializer):
     content = ContentSerializer(required=True)
+    comments = CommentSerializer(read_only=True, many=True)
 
     class Meta:
         model = Post
@@ -57,53 +91,8 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         content_data = validated_data.pop('content')
         content = instance.content
-        content.fileContent = content_data.get(
-            'attachment', content.fileContent)
-        content.textContent = content_data.get(
-            'textContent', content.textContent)
-
-        instance.title = validated_data.get('title', instance.title)
-        content.save()
-        instance.save()
-        return instance
-
-
-class CommentSerializer(serializers.HyperlinkedModelSerializer):
-    content = ContentSerializer(required=True)
-
-    class Meta:
-        model = Comment
-        fields = ('url', 'id', 'author', 'dateTimePosted', 'dateTimeEdited', 'parentPost',
-                  'content', 'points', 'likers', 'dislikers')
-        read_only_fields = ('url', 'id', 'dateTimePosted',
-                            'dateTImeEdited', 'points', 'likers', 'dislikers')
-
-    def validate(self, data):
-        postURL = data['parentPost']
-        parsedUrl = urlparse(url).path
-        try:
-            course = resolve(parsedUrl).func.cls.serializer_class.Meta.model.objects.get(
-                **resolve(parsedUrl).kwargs)
-        except Http404:
-            raise serializers.ValidationError("Invalid parent post URL")
-        return data
-
-    def create(self, validated_data):
-        content_data = validated_data.pop('content')
-        contentInstance = Content.objects.create(**content_data)
-        comment = Comment(content=contentInstance, **validated_data)
-        comment.save()
-        parentPost = comment.parentPost
-        parentPost.comments.add(comment)
-        author = comment.author
-        author.comments.add(comment)
-        return comment
-
-    def update(self, instance, validated_data):
-        content_data = validated_data.pop('content')
-        content = instance.content
-        content.fileContent = content_data.get(
-            'attachment', content.fileContent)
+        content.attachment = content_data.get(
+            'attachment', content.attachment)
         content.textContent = content_data.get(
             'textContent', content.textContent)
 

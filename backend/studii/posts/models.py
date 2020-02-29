@@ -9,10 +9,9 @@ class Content(models.Model):
         upload_to='uploadContent/', blank=True, null=False)
     textContent = models.TextField(blank=False)
 
-    # FIXME: Consider changing content string representation
     def __str__(self):
-        if self.fileContent is not None:
-            return self.fileContent.name
+        if self.attachment is not None:
+            return self.attachment.name
         elif self.textContent is not None:
             return self.response_content[:20]
 
@@ -80,7 +79,7 @@ class Comment(models.Model):
     dateTimePosted = models.DateTimeField(auto_now_add=True, editable=False)
     dateTimeEdited = models.DateTimeField(auto_now=True, null=True)
     parentPost = models.ForeignKey(
-        'Post', null=True, on_delete=models.CASCADE, editable=False, related_name='comment')
+        'Post', null=True, on_delete=models.CASCADE, editable=True, related_name='comment')
     content = models.OneToOneField(
         Content, on_delete=models.CASCADE, related_name='comment')
     points = models.IntegerField(default=0)
