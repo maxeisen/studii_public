@@ -2,6 +2,9 @@ from rest_framework import serializers
 from .models import Content, Course, Post, Comment
 from userAuth.models import User
 from django.core import exceptions
+from django.urls import resolve
+from urllib.parse import urlparse
+from django.http import Http404
 
 
 class ContentSerializer(serializers.ModelSerializer):
@@ -13,7 +16,9 @@ class ContentSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Course
-        fields = ("__all__")
+        fields = ('id', 'url', 'courseCode', 'name', 'university',
+                  'description', 'creator', 'posts', 'members')
+        read_only_fields = ('url', 'id', 'posts', 'members')
 
 
 class JoinOrLeaveCourseSerializer(serializers.Serializer):
@@ -28,41 +33,6 @@ class VoteSerializer(serializers.Serializer):
         choices=('like', 'dislike', 'neutral'))
 
 
-class PostSerializer(serializers.HyperlinkedModelSerializer):
-    content = ContentSerializer(required=True)
-
-    class Meta:
-        model = Post
-        fields = ('url', 'id', 'dateTimePosted', 'dateTimeEdited', 'title',
-                  'author', 'course', 'content', 'comments', 'points', 'likers', 'dislikers')
-        read_only_fields = ('url', 'id', 'dateTimePosted',
-                            'dateTImeEdited', 'comments', 'points', 'likers', 'dislikers')
-
-    def create(self, validated_data):
-        content_data = validated_data.pop('content')
-        contentInstance = Content.objects.create(**content_data)
-        post = Post(content=contentInstance, **validated_data)
-        post.save()
-        course = post.course
-        course.posts.add(post)
-        author = post.author
-        author.posts.add(post)
-        return post
-
-    def update(self, instance, validated_data):
-        content_data = validated_data.pop('content')
-        content = instance.content
-        content.fileContent = content_data.get(
-            'attachment', content.fileContent)
-        content.textContent = content_data.get(
-            'textContent', content.textContent)
-
-        instance.title = validated_data.get('title', instance.title)
-        content.save()
-        instance.save()
-        return instance
-
-
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
     content = ContentSerializer(required=True)
 
@@ -71,7 +41,7 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'id', 'author', 'dateTimePosted', 'dateTimeEdited', 'parentPost',
                   'content', 'points', 'likers', 'dislikers')
         read_only_fields = ('url', 'id', 'dateTimePosted',
-                            'dateTImeEdited', 'points', 'likers', 'dislikers')
+                            'dateTimeEdited', 'points', 'likers', 'dislikers')
 
     def create(self, validated_data):
         content_data = validated_data.pop('content')
@@ -87,8 +57,42 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         content_data = validated_data.pop('content')
         content = instance.content
-        content.fileContent = content_data.get(
-            'attachment', content.fileContent)
+        content.attachment = content_data.get(
+            'attachment', content.attachment)
+        content.textContent = content_data.get(
+            'textContent', content.textContent)
+        content.save()
+        instance.save()
+        return instance
+
+
+class PostSerializer(serializers.HyperlinkedModelSerializer):
+    content = ContentSerializer(required=True)
+    comments = CommentSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Post
+        fields = ('url', 'id', 'dateTimePosted', 'dateTimeEdited', 'title',
+                  'author', 'course', 'content', 'comments', 'points', 'likers', 'dislikers')
+        read_only_fields = ('url', 'id', 'dateTimePosted',
+                            'dateTimeEdited', 'comments', 'points', 'likers', 'dislikers')
+
+    def create(self, validated_data):
+        content_data = validated_data.pop('content')
+        contentInstance = Content.objects.create(**content_data)
+        post = Post(content=contentInstance, **validated_data)
+        post.save()
+        course = post.course
+        course.posts.add(post)
+        author = post.author
+        author.posts.add(post)
+        return post
+
+    def update(self, instance, validated_data):
+        content_data = validated_data.pop('content')
+        content = instance.content
+        content.attachment = content_data.get(
+            'attachment', content.attachment)
         content.textContent = content_data.get(
             'textContent', content.textContent)
 

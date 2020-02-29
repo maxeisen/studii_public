@@ -9,8 +9,6 @@ from knox.views import LoginView as KnoxLoginView
 from django.contrib.auth import login
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
-# TODO: Add public profile view
-
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
