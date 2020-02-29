@@ -1,6 +1,7 @@
 from rest_framework.parsers import FileUploadParser, JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import status, permissions, viewsets
 from .models import Course, Post, Comment
 from userAuth.models import User
@@ -66,6 +67,19 @@ class PostView(viewsets.ModelViewSet):
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+    def partial_update(self, request, pk=None):
+        post = self.get_object()
+        if post.author == request.user:
+            post_serializer = PostSerializer(
+                post, data=request.data, partial=True, context={'request': request})
+            if post_serializer.is_valid():
+                post_serializer.save()
+                return Response(post_serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
 # TODO: Use IsLoggedInUserOrAdmin to simplify
 
 
@@ -109,6 +123,19 @@ class CommentView(viewsets.ModelViewSet):
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+    def partial_update(self, request, pk=None):
+        comment = self.get_object()
+        if comment.author == request.user:
+            comment_serializer = CommentSerializer(
+                comment, data=request.data, partial=True, context={'request': request})
+            if comment_serializer.is_valid():
+                comment_serializer.save()
+                return Response(comment_serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
 
 class VoteView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -137,12 +164,18 @@ class VoteView(APIView):
         if not content.likers.filter(id=user.id).exists() and not content.dislikers.filter(id=user.id).exists():
             content.likers.add(user)
             content.points = content.points + 1
+            author = content.author
+            author.clout = author.clout + 1
+            author.save()
             content.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         elif not content.likers.filter(id=user.id).exists() and content.dislikers.filter(id=user.id).exists():
             content.likers.add(user)
             content.dislikers.remove(user)
             content.points = content.points + 2
+            author = content.author
+            author.clout = author.clout + 2
+            author.save()
             content.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
@@ -152,12 +185,18 @@ class VoteView(APIView):
         if not content.likers.filter(id=user.id).exists() and not content.dislikers.filter(id=user.id).exists():
             content.dislikers.add(user)
             content.points = content.points - 1
+            author = content.author
+            author.clout = author.clout - 1
+            author.save()
             content.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         elif content.likers.filter(id=user.id).exists() and not content.dislikers.filter(id=user.id).exists():
             content.dislikers.add(user)
             content.likers.remove(user)
             content.points = content.points - 2
+            author = content.author
+            author.clout = author.clout - 2
+            author.save()
             content.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
@@ -167,11 +206,17 @@ class VoteView(APIView):
         if content.likers.filter(id=user.id).exists():
             content.likers.remove(user)
             content.points = content.points - 1
+            author = content.author
+            author.clout = author.clout - 1
+            author.save()
             content.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         if content.dislikers.filter(id=user.id).exists():
             content.dislikers.remove(user)
             content.points = content.points + 1
+            author = content.author
+            author.clout = author.clout + 1
+            author.save()
             content.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
@@ -229,14 +274,11 @@ class LeaveCourseView(APIView):
 class CourseView(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = (IsLoggedInUserOrAdmin,)
 
     def get_permissions(self):
         permission_classes = []
-        if self.action == 'retrieve':
+        if self.action == 'retrieve' or self.action == 'update' or self.action == 'partial_update' or self.action == 'create' or self.action == 'destroy':
             permission_classes = [permissions.IsAuthenticated]
-        elif self.action == 'update' or self.action == 'partial_update' or self.action == 'create' or self.action == 'destroy':
-            permission_classes = [IsLoggedInUserOrAdmin]
         elif self.action == 'list':
             permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
@@ -311,4 +353,17 @@ class EnrolledCoursesView(APIView):
         courses = user.courses
         serializer = CourseSerializer(
             courses, many=True, context={'request': request})
+        return Response(serializer.data)
+
+class GetUserFeedView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get(self, request, format=None):
+        paginator = pagination_class = LimitOffsetPagination()
+        enrolledCourses = request.user.courses.all()
+        posts = Post.objects.filter(
+            course__in=enrolledCourses).order_by('-dateTimePosted')
+        postFeed = paginator.paginate_queryset(posts, request)    
+        serializer = PostSerializer(
+            postFeed, many=True, context={'request': request})
         return Response(serializer.data)

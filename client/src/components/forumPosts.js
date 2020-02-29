@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { observer, inject } from "mobx-react";
 import ContentWrapper from "./contentWrapper";
 import { css } from "@emotion/core";
 import Advertisement from "../components/advertisement";
 import IndividualPost from "../components/individualPost";
+import Select from "react-select";
 
 const adFrequency = 2;
 const adCluster = [
@@ -40,9 +42,46 @@ const adCluster = [
   }
 ];
 
-const Forum = () => {
+const Forum = ({store}) => {
   const [newQuestionTitle, setNewQuestionTitle] = useState("");
   const [newQuestionBody, setNewQuestionBody] = useState("");
+  const [newQuestionCourseOptions, setNewQuestionCourseOptions] = useState([]);
+  const [newQuestionCourse, setNewQuestionCourse] = useState("");
+  const [areCoursesFetched, setAreCoursesFetched] = useState(false);
+
+  useEffect(() => {
+    if (!areCoursesFetched && store.UserToken) {
+      const getData = async () => {
+
+        const data = await fetch(
+          `http://localhost:8000/posts/enrolled/${store.UserId}/`,
+          {
+            mode: 'cors', // no-cors, *cors, same-origin
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Token ${store.UserToken}`
+            },
+          }
+        ).then(r => r.json());
+        
+        setNewQuestionCourseOptions(
+          data.map(x => ({
+            label: x.courseCode + " - " + x.name,
+            value: x.url
+          }))
+        )
+
+        // setNewQuestionCourseOptions(
+        //   data.map(x => ({
+        //     label: `${x.courseCode} - ${x.name}`,
+        //     value: x.url
+        //   }))
+        // );
+        setAreCoursesFetched(true);
+      };
+      getData();
+    }
+  }, [store.UserToken, areCoursesFetched]);
 
   const [forumPosts, setForumPosts] = useState([
     {
@@ -148,8 +187,10 @@ const Forum = () => {
       setLikedPosts([...likedPosts, postID]);
     }
   };
+
   return (
     <section id="forum">
+      {/* {JSON.stringify(store)} */}
       <div
         css={css`
           padding: 1.5rem;
@@ -186,6 +227,22 @@ const Forum = () => {
           css={css`
             font-weight: bold;
           `}
+          htmlFor="questionCourse"
+        >
+          Course
+        </label>
+        <br />
+        <Select
+          css={css`width: 80%; margin-bottom: 2rem;`}
+          value={newQuestionCourse}
+          onChange={setNewQuestionCourse}
+          options={newQuestionCourseOptions}
+        />
+        {/* {JSON.stringify(courseOptions)} */}
+        <label
+          css={css`
+            font-weight: bold;
+          `}
           htmlFor="questionBody"
         >
           Body
@@ -207,21 +264,22 @@ const Forum = () => {
           css={css`
             color: #333;
           `}
-          onClick={() => {
-            setForumPosts([
-              {
-                postID: "20",
-                author: "MEisen",
-                email: "MEisen@queensu.ca",
-                course: "CISC 365",
-                title: newQuestionTitle,
-                content: newQuestionBody,
-                date: "January 30, 2020",
-                numComments: 0,
-                score: 0
+          onClick={async () => {
+            await fetch("http://localhost:8000/posts/content/", {
+              method: 'POST', // *GET, POST, PUT, DELETE, etc.
+              mode: 'cors', // no-cors, *cors, same-origin
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${store.UserToken}`
               },
-              ...forumPosts
-            ]);
+              body: JSON.stringify({
+                title: newQuestionTitle,
+                course: newQuestionCourse.value,
+                content: {
+                  textContent: newQuestionBody
+                }
+              })
+            })
           }}
         >
           Submit
@@ -249,4 +307,4 @@ const Forum = () => {
   );
 };
 
-export default Forum;
+export default inject(`store`)(observer(Forum));

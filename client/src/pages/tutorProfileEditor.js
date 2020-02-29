@@ -5,15 +5,19 @@ import { css } from "@emotion/core";
 import ContentWrapper from "../components/contentWrapper";
 import Select from "react-select";
 
-function StudentProfileBuilder({ store }) {
+function TutorProfileEditor({ store }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [school, setSchool] = useState("Queen's University");
-  const [program, setProgram] = useState("");
-  const [gradYear, setGradYear] = useState("");
+  const [school, setSchool] = useState("");
+  const [affiliation, setAffiliation] = useState("");
+  const [subjects, setSubjects] = useState("");
+
+  const [message, setMessage] = useState("");
+
+  const history = useHistory();
 
   const [courseOptions, setCourseOptions] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
@@ -27,7 +31,7 @@ function StudentProfileBuilder({ store }) {
           "http://localhost:8000/posts/courses/"
         ).then(r => r.json());
         setCourseOptions(
-          data.results.map(x => ({
+          data.map(x => ({
             label: `${x.courseCode} - ${x.name}`,
             value: x.url
           }))
@@ -38,27 +42,24 @@ function StudentProfileBuilder({ store }) {
     }
   }, [areCoursesFetched]);
 
-  const [message, setMessage] = useState("");
-
-  const history = useHistory();
-
   const submitProfile = () => {
     const data = {
-      accountType: "student",
+      accountType: "tutor",
       email,
       username: email,
       password,
-      courses: selectedCourses.map(x => x.value),
+      posts: [],
       first_name: firstName,
       last_name: lastName,
       profile: {
-        // name: name,
         university: school,
-        program: program,
-        gradYear: gradYear
+        affiliation: affiliation,
+        courses: selectedCourses.map(x => x.value)
+        // studentNumber: studentNumber
+        // program: program,
+        // gradYear: gradYear,
       }
     };
-
     fetch("http://localhost:8000/userauth/users/", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
@@ -71,20 +72,20 @@ function StudentProfileBuilder({ store }) {
     })
       .then(r => r.json())
       .then(r => {
-        console.log(r);
+        // console.log(r);
         history.push("/login");
-        if (r.status >= 200 && r.status < 300) {
-          setMessage("Your profile has been created! Redirecting...");
-          setTimeout(() => {
-            history.push("/login");
-          }, 3000);
-        } else {
-          throw new Error("Profile build failed");
-        }
+        // if (r.status >= 200 && r.status < 300) {
+        //   setMessage("Your profile has been created! Redirecting...");
+        //   setTimeout(() => {
+        //     history.push("/login");
+        //   }, 3000);
+        // } else {
+        //   throw new Error("Profile build failed");
+        // }
       })
       .catch(r => {
-        console.log(r);
-        setMessage("Could not create profile");
+        // console.log(r);
+        setMessage("Could not edit profile");
       });
   };
 
@@ -96,7 +97,7 @@ function StudentProfileBuilder({ store }) {
           margin: 0 auto;
         `}
       >
-        <h2>Create a Student Account</h2>
+        <h2>Your Tutor Profile</h2>
         {message ? (
           message
         ) : (
@@ -137,64 +138,47 @@ function StudentProfileBuilder({ store }) {
                 type="password"
               />
             </div>
-            <span>
-              <div
-                css={css`
-                  margin-bottom: 1rem;
-                `}
-              >
-                <label>First Name</label>
-                <br />
-                <input
-                  value={firstName}
-                  onChange={e => {
-                    setFirstName(e.target.value);
-                  }}
-                  type="text"
-                />
-              </div>
-              <div
-                css={css`
-                  margin-bottom: 1rem;
-                `}
-              >
-                <label>Last Name</label>
-                <br />
-                <input
-                  value={lastName}
-                  onChange={e => {
-                    setLastName(e.target.value);
-                  }}
-                  type="text"
-                />
-              </div>
-            </span>
             <div
               css={css`
                 margin-bottom: 1rem;
               `}
             >
-              <label>School</label>
+              <label>First Name</label>
               <br />
               <input
-                value={school}
+                value={firstName}
                 onChange={e => {
-                  setSchool(e.target.value);
+                  setFirstName(e.target.value);
                 }}
                 type="text"
               />
             </div>
             <div
               css={css`
-                margin-bottom: 0.8rem;
+                margin-bottom: 1rem;
               `}
             >
-              <label>Program</label>
+              <label>Last Name</label>
               <br />
               <input
-                value={program}
+                value={lastName}
                 onChange={e => {
-                  setProgram(e.target.value);
+                  setLastName(e.target.value);
+                }}
+                type="text"
+              />
+            </div>
+            <div
+              css={css`
+                margin-bottom: 1rem;
+              `}
+            >
+              <label>School (optional)</label>
+              <br />
+              <input
+                value={school}
+                onChange={e => {
+                  setSchool(e.target.value);
                 }}
                 type="text"
               />
@@ -212,21 +196,20 @@ function StudentProfileBuilder({ store }) {
                 onChange={setSelectedCourses}
                 options={courseOptions}
               />
-              {JSON.stringify(selectedCourses)}
             </div>
             <div
               css={css`
                 margin-bottom: 1rem;
               `}
             >
-              <label>Expected Graduation Year</label>
+              <label>Affiliated Tutoring Service (optional)</label>
               <br />
               <input
-                value={gradYear}
+                value={affiliation}
                 onChange={e => {
-                  setGradYear(e.target.value);
+                  setAffiliation(e.target.value);
                 }}
-                type="number"
+                type="text"
               />
             </div>
             <button
@@ -245,4 +228,4 @@ function StudentProfileBuilder({ store }) {
   );
 }
 
-export default inject(`store`)(observer(StudentProfileBuilder));
+export default inject(`store`)(observer(TutorProfileEditor));

@@ -29,6 +29,8 @@ function Login({ store }) {
         if (r.token) {
           setMessage("You're logged in! Redirecting...");
           store.SetToken(r.token);
+          store.SetIsStudent(!r.user.isTutor);
+          store.SetUserId(r.user.id);
           store.SetEmail(email);
           history.push("/forum");
         } else {

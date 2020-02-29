@@ -23,7 +23,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                   'last_name', 'password', 'clout', 'courses', 'posts', 'comments', 'profile', 'isTutor')
         read_only_fields = ('url', 'id', 'clout', 'comments')
         extra_kwargs = {'password': {'write_only': True},
-                        'courses': {'many': True}}
+                        'courses': {'many': True, 'required': True}}
         courses = JoinOrLeaveCourseSerializer(many=True)
 
     def validate_password(self, value):
@@ -45,7 +45,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             user.courses.add(course)
             user.save()
             course.members.add(user)
-
         return user
 
     def update(self, instance, validated_data):
@@ -53,12 +52,20 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         profile = instance.profile
 
         instance.email = validated_data.get('email', instance.email)
+        instance.isTutor = validated_data.get('isTutor', instance.isTutor)
+        instance.first_name = validated_data.get(
+            'first_name', instance.first_name)
+        instance.last_name = validated_data.get(
+            'last_name', instance.last_name)
         instance.save()
 
         profile.avatar = profile_data.get('avatar', profile.avatar)
         profile.university = profile_data.get('university', profile.university)
         profile.program = profile_data.get('program', profile.program)
         profile.gradYear = profile_data.get('gradYear', profile.gradYear)
+        profile.bio = profile_data.get('bio', profile.bio)
+        profile.affiliation = profile_data.get(
+            'affiliation', profile.affiliation)
         profile.save()
 
         return instance

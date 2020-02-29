@@ -31,7 +31,7 @@ function TutorProfileBuilder({ store }) {
           "http://localhost:8000/posts/courses/"
         ).then(r => r.json());
         setCourseOptions(
-          data.map(x => ({
+          data.results.map(x => ({
             label: `${x.courseCode} - ${x.name}`,
             value: x.url
           }))

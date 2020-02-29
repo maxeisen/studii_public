@@ -3,8 +3,16 @@ import { create, persist } from "mobx-persist";
 
 class UserModel {
   UserEmail = "";
+  UserIsStudent = null;
   UserToken = "";
+  UserId = "";
 
+  SetUserId(val){
+    this.UserId = val;
+  }
+  SetIsStudent(val){
+    this.UserIsStudent = val;
+  }
   SetEmail(val) {
     this.UserEmail = val;
   }
@@ -15,13 +23,19 @@ class UserModel {
 decorate(UserModel, {
   UserEmail: observable,
   SetEmail: action,
+  UserIsStudent: observable,
+  SetIsStudent: action,
+  UserId: observable,
+  SetUserId: action,
   UserToken: observable,
   SetToken: action
 });
 
 const schema = {
   UserEmail: true,
-  UserToken: true
+  UserIsStudent: true,
+  UserToken: true,
+  UserId: true
 };
 
 const UserStore = persist(schema)(new UserModel());

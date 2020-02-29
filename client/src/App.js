@@ -12,8 +12,10 @@ import WrapWithMobx from "./components/wrapWithMobx";
 import ScrollToTop from "./components/ScrollToTop";
 import Header from "./components/header";
 import StudentProfileBuilder from "./pages/studentProfileBuilder";
+import StudentProfileEditor from "./pages/studentProfileEditor";
 import TutorProfileBuilder from "./pages/tutorProfileBuilder";
 import Tutors from "./pages/tutors";
+import TutorProfileEditor from "./pages/tutorProfileEditor";
 
 export default function BasicExample() {
   return (
@@ -45,6 +47,11 @@ export default function BasicExample() {
               <Header />
               <StudentProfileBuilder />
             </Route>
+            <Route path="/studentProfileEditor">
+              <Sidebar />
+              <Header />
+              <StudentProfileEditor />
+            </Route>
             <Route path="/tutorProfile">
               <Sidebar />
               <Header />
@@ -54,6 +61,11 @@ export default function BasicExample() {
               <Sidebar />
               <Header />
               <Tutors />
+            </Route>
+            <Route path="/tutorProfileEditor">
+              <Sidebar />
+              <Header />
+              <TutorProfileEditor />
             </Route>
             <Route path="/forum">
               <Sidebar />

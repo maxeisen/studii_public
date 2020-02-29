@@ -1,20 +1,17 @@
 from djongo import models
 import uuid
 
-
-# TODO: Add likes
-# TODO: Add tags
 # TODO: Enable MongoDB Access control
+
 
 class Content(models.Model):
     attachment = models.FileField(
         upload_to='uploadContent/', blank=True, null=False)
     textContent = models.TextField(blank=False)
 
-    # FIXME: Consider changing content string representation
     def __str__(self):
-        if self.fileContent is not None:
-            return self.fileContent.name
+        if self.attachment is not None:
+            return self.attachment.name
         elif self.textContent is not None:
             return self.response_content[:20]
 
@@ -24,7 +21,7 @@ class Post(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     title = models.CharField(max_length=70)
     author = models.ForeignKey(
-        'userAuth.User', null=True, on_delete=models.SET_NULL, related_name='post')
+        'userAuth.User', null=True, on_delete=models.SET_NULL, editable=False, related_name='post')
     dateTimePosted = models.DateTimeField(auto_now_add=True, editable=False)
     dateTimeEdited = models.DateTimeField(auto_now=True, null=True)
     course = models.ForeignKey(
@@ -60,10 +57,11 @@ class Course(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     courseCode = models.CharField(max_length=7)
     name = models.CharField(max_length=75)
-    university = models.CharField(max_length=4, choices=UNIVERSITY_CHOICES)
+    university = models.CharField(
+        max_length=4, editable=False, choices=UNIVERSITY_CHOICES)
     description = models.CharField(max_length=255, blank=True)
     creator = models.ForeignKey(
-        'userAuth.User', on_delete=models.SET_NULL, null=True, related_name='course')
+        'userAuth.User', on_delete=models.SET_NULL, null=True, editable=False, related_name='course')
     posts = models.ArrayReferenceField(
         to='Post', on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
     members = models.ArrayReferenceField(
@@ -77,11 +75,11 @@ class Comment(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     author = models.ForeignKey(
-        'userAuth.User', null=True, on_delete=models.SET_NULL, related_name='comment')
+        'userAuth.User', null=True, on_delete=models.SET_NULL, editable=False, related_name='comment')
     dateTimePosted = models.DateTimeField(auto_now_add=True, editable=False)
     dateTimeEdited = models.DateTimeField(auto_now=True, null=True)
     parentPost = models.ForeignKey(
-        'Post', null=True, on_delete=models.CASCADE, related_name='comment')
+        'Post', null=True, on_delete=models.CASCADE, editable=True, related_name='comment')
     content = models.OneToOneField(
         Content, on_delete=models.CASCADE, related_name='comment')
     points = models.IntegerField(default=0)
