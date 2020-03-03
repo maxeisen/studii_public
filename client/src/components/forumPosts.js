@@ -49,29 +49,29 @@ const Forum = ({ store }) => {
   const [newQuestionCourse, setNewQuestionCourse] = useState("");
   const [areCoursesFetched, setAreCoursesFetched] = useState(false);
 
-  const [forumPosts, setForumPosts] = useState([]);
+  // const [forumPosts, setForumPosts] = useState([]);
   const [arePostsFetched, setArePostsFetched] = useState(false);
 
-  useEffect(() => {
-    if (!arePostsFetched && store.UserToken) {
-      const getData = async () => {
-        const data = await fetch(
-          `http://localhost:8000/posts/getfeed/?limit=10&offset=0`,
-          {
-            mode: "cors", // no-cors, *cors, same-origin
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Token ${store.UserToken}`
-            }
-          }
-        ).then(r => r.json());
-        alert(JSON.stringify(data));
-        setForumPosts(data);
-        setArePostsFetched(true);
-      };
-      getData();
-    }
-  });
+  // useEffect(() => {
+  //   if (!arePostsFetched && store.UserToken) {
+  //     const getData = async () => {
+  //       const data = await fetch(
+  //         `http://localhost:8000/posts/getfeed/?limit=10&offset=0`,
+  //         {
+  //           mode: "cors", // no-cors, *cors, same-origin
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: `Token ${store.UserToken}`
+  //           }
+  //         }
+  //       ).then(r => r.json());
+  //       alert(JSON.stringify(data));
+  //       setForumPosts(data);
+  //       setArePostsFetched(true);
+  //     };
+  //     getData();
+  //   }
+  // });
 
   useEffect(() => {
     if (!areCoursesFetched && store.UserToken) {
@@ -107,6 +107,103 @@ const Forum = ({ store }) => {
       setLikedPosts([...likedPosts, postID]);
     }
   };
+
+  const [forumPosts, setForumPosts] = useState([
+    {
+      postID: "2",
+      author: "MEisen",
+      email: "MEisen@queensu.ca",
+      course: "CISC 365",
+      title: "What is Huffman Encoding?",
+      content:
+        "Really struggling with this assignment. Someone please help me with implementing this Huffman Encoding algorithm cause I have no clue what I'm doing. Thanks!",
+      date: "October 29, 2019",
+      numComments: 2,
+      score: 4
+    },
+    {
+      postID: "3",
+      author: "ConnorFrosh",
+      email: "ConnorFrosh@queensu.ca",
+      course: "General",
+      title: "What exactly is computer science? and why am I studying it",
+      content:
+        "I'm starting to rethink this whole becoming a compsci major thing. Anyone have any advice?",
+      date: "October 26, 2019",
+      numComments: 6,
+      score: 11
+    },
+    {
+      postID: "6",
+      author: "NetworkMan",
+      email: "NetworkMan@queensu.ca",
+      course: "CMPE 452",
+      title: "Should I do PCA analysis for my MLP?",
+      content:
+        "I am working on a project where I need to build my own multi-layer perceptron neural network, and I need some help. I want to...",
+      date: "October 25, 2019",
+      numComments: 3,
+      score: 6
+    },
+    {
+      postID: "7",
+      author: "ConnorFrosh",
+      email: "ConnorFrosh@queensu.ca",
+      course: "ARTH 101",
+      title: "Why were the Flourentine Medidi family important to Renaissance?",
+      content: "What the title says... I really need help in this course :/",
+      date: "October 23, 2019",
+      numComments: 2,
+      score: 0
+    },
+    {
+      postID: "8",
+      author: "EvolutionIsntReal",
+      email: "EvolutionIsntReal@queensu.ca",
+      course: "BIOL 221",
+      title: "Isn't evolution just a theory that remains unproven?",
+      content:
+        "I understand that evolution is a theory and that it explains how humans developed to be how they are today? What I don't understand is...",
+      date: "October 21, 2019",
+      numComments: 24,
+      score: -53
+    },
+    {
+      postID: "1",
+      author: "Student123",
+      email: "Student123@queensu.ca",
+      course: "CISC 220",
+      title: "What is a command-line interface?",
+      content:
+        "Hi guys, I'm reading over some notes from this week's lectures and I have no clue what a command-line interface is. Can anyone offer some help?",
+      date: "November 4, 2019",
+      numComments: 4,
+      score: 15
+    },
+    {
+      postID: "4",
+      author: "Hill_Ross",
+      email: "ross.hill@queensu.ca",
+      course: "CISC 499",
+      title: "Can I get some thesis suggestions? I'm lost",
+      content: "Just read the title. Anything helps!!!",
+      date: "October 20, 2019",
+      numComments: 7,
+      score: 12
+    },
+    {
+      postID: "5",
+      author: "PattyLen",
+      email: "PattyLen@queensu.ca",
+      course: "General",
+      title: "Django vs. Django Unchained",
+      content:
+        "Is Django (Python framework) named after Django Unchained (movie), or vice versa. I know it's gotta be one or the other, just don't know which. Please help!",
+      date: "October 18, 2019",
+      numComments: 2,
+      score: 8
+    }
+  ]);
 
   return (
     <section id="forum">
