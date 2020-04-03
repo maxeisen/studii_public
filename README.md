@@ -2,7 +2,7 @@
 A collaborative note sharing and study platform.
 
 ## Backend
-### API Endpionts
+### API Endpoints
 `userauth/` : User authentication app
 
 ------------
